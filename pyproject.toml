@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "forecasting-bike-sharing-availability"
+version = "0.1.0"
+description = "Master's thesis with the topic \"Forecasting bike sharing availability\""
+authors = ["Valentyna Sinichenko"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+numpy = "^2.1.3"
+pandas = "^2.2.3"
+pyreadr = "^0.5.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
