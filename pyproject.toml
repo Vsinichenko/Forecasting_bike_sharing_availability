@@ -10,6 +10,9 @@ python = "^3.9"
 pandas = "^2.2.3"
 pyreadr = "^0.5.2"
 seaborn = "^0.13.2"
+tqdm = "^4.67.1"
+ipywidgets = "^8.1.5"
+pyinstrument = "^5.0.0"
 
 
 [build-system]
