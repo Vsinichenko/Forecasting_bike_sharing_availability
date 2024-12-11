@@ -165,4 +165,5 @@ cython_debug/
 data/
 keys/
 /data
-nextbike/
+nextbike_original_data/
+.DS_Store
