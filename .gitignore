@@ -163,3 +163,4 @@ cython_debug/
 
 # Custom added
 data/
+keys/
