@@ -19,6 +19,8 @@ numpy = "2.0.2"
 dvc-gdrive = "^3.0.1"
 dvc = "^3.58.0"
 openai = "1.57.1"
+geopandas = "^1.0.1"
+contextily = "^1.6.2"
 
 
 [build-system]
