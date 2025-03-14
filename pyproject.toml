@@ -24,6 +24,7 @@ geopandas = "^1.0.1"
 contextily = "^1.6.2"
 plotly = "^6.0.0"
 nbformat = ">=4.2.0"
+h3 = "^4.2.2"
 
 
 [build-system]
