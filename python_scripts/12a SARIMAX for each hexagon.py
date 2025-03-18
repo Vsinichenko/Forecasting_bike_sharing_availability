@@ -39,7 +39,7 @@ start_time = time.time()
 
 arima = auto_arima(y=train_DD, trace=True,
                       suppress_warnings=False, 
-                      seasonal=True, m=48, n_fits=1, maxiter=1)
+                      seasonal=True, m=48)
 
 logging.info(f"Elapsed time: {time.time() - start_time}")
 
