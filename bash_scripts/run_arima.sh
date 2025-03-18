@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /Users/v.sinichenko/miniconda3/etc/profile.d/conda.sh
+source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda activate FBSfor_arima
 

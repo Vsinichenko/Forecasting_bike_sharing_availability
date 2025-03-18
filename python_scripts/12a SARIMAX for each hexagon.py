@@ -8,6 +8,7 @@ import datetime
 
 
 log_fullpath = "../output.log"
+logging.info("Start")
 
 logging.basicConfig(
     level=logging.INFO,
