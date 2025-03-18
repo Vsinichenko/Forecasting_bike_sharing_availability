@@ -11,7 +11,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("output.log"),
+        logging.FileHandler(log_fullpath),
         logging.StreamHandler(sys.stdout)  # Optional: still print to console
     ]
 )
@@ -36,4 +36,4 @@ sys.stderr = LoggerWriter(logging.error)  # Capture warnings and errors
 print("This is a print statement")  # Captured as INFO
 logging.info("This is a logging.info message")
 logging.warning("This is a logging.warning message")  # WARNING level
-#raise ValueError("This is an exception")  # Captured as ERROR
+raise ValueError("This is an exception")  # Captured as ERROR
