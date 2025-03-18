@@ -4,10 +4,10 @@ import sys
 import pandas as pd
 import time
 import pickle
-import datetime
+from datetime import datetime
 
-
-log_fullpath = "../output.log"
+time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+log_fullpath = f"../output {time}.log"
 logging.info("Start")
 
 logging.basicConfig(
@@ -46,7 +46,7 @@ logging.info(f"Elapsed time: {time.time() - start_time}")
 
 logging.info(f"Best ARIMA model: {arima.summary()}")
 
-time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
 with open(f'models/arima {time}.pkl', 'wb') as pkl:
     pickle.dump(arima, pkl)
 
