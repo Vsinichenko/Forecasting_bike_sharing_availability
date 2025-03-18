@@ -163,6 +163,7 @@ cython_debug/
 
 # Custom added
 data/
+models/
 keys/
 /data
 nextbike_original_data/
