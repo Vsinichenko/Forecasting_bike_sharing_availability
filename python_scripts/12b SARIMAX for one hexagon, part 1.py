@@ -16,7 +16,7 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_fullpath = f"../output_{start_time}.log"
+log_fullpath = f"../output_part_1_DD_{start_time}.log"
 
 # Configure logging
 logging.basicConfig(
@@ -64,9 +64,7 @@ df_DD.hex_id.unique()
 df_FB.hex_id.unique()
 
 
-df_DD.loc[df_DD.hex_id == mycell, ["datetime_hour", "rent_count", "return_count"]].plot(
-    x="datetime_hour", y=["rent_count", "return_count"]
-)
+df_DD.loc[df_DD.hex_id == mycell, ["datetime_hour", "rent_count", "return_count"]].plot(x="datetime_hour", y=["rent_count", "return_count"])
 
 
 test_range_1_DD = pd.date_range(start="2024-03-21", end="2024-03-31")
@@ -86,24 +84,16 @@ df_DD_1 = df_DD.loc[df_DD.datetime_hour.dt.date <= test_range_1_DD[-1]]
 df_DD_2 = df_DD.loc[df_DD.datetime_hour.dt.date > test_range_1_DD[-1]]
 
 
-train_validation_DD_1 = df_DD_1.loc[
-    ~df_DD_1.datetime_hour.dt.date.isin(test_range_1_DD)
-]
+train_validation_DD_1 = df_DD_1.loc[~df_DD_1.datetime_hour.dt.date.isin(test_range_1_DD)]
 
 
-test_DD_1 = df_DD.loc[df_DD.datetime_hour.dt.date.isin(test_range_1_DD)].sort_values(
-    "datetime_hour"
-)
+test_DD_1 = df_DD.loc[df_DD.datetime_hour.dt.date.isin(test_range_1_DD)].sort_values("datetime_hour")
 
 
-train_validation_DD_2 = df_DD_2.loc[
-    ~df_DD_2.datetime_hour.dt.date.isin(test_range_2_DD)
-].sort_values("datetime_hour")
+train_validation_DD_2 = df_DD_2.loc[~df_DD_2.datetime_hour.dt.date.isin(test_range_2_DD)].sort_values("datetime_hour")
 
 
-test_DD_2 = df_DD_2.loc[
-    df_DD_2.datetime_hour.dt.date.isin(test_range_2_DD)
-].sort_values("datetime_hour")
+test_DD_2 = df_DD_2.loc[df_DD_2.datetime_hour.dt.date.isin(test_range_2_DD)].sort_values("datetime_hour")
 
 
 len(test_DD_2)
@@ -112,9 +102,7 @@ len(test_DD_2)
 len(train_validation_DD_2)
 
 
-train_1 = train_validation_DD_1[train_validation_DD_1.hex_id == mycell].set_index(
-    "datetime_hour"
-)["rent_count"]
+train_1 = train_validation_DD_1[train_validation_DD_1.hex_id == mycell].set_index("datetime_hour")["rent_count"]
 
 
 test_1 = test_DD_1[test_DD_1.hex_id == mycell].set_index("datetime_hour")["rent_count"]
@@ -135,9 +123,8 @@ test_1 = test_1.asfreq("h")
 start_train_time = time.time()
 logging.info("Start ARIMA optimisation")
 
-model_1 = auto_arima(
-    y=train_1, trace=True, suppress_warnings=False, seasonal=True, m=24, n_jobs=-1
-)
+# max_p=3, max_d=2, max_q=3,
+model_1 = auto_arima(y=train_1, trace=True, stepwise=False, suppress_warnings=False, seasonal=True, m=24, n_jobs=-1)
 model_1.fit(train_1)
 
 logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
