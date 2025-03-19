@@ -43,8 +43,8 @@ sys.stderr = LoggerWriter(logging.error)  # Capture warnings and errors
 logging.info("Reading data")
 
 file_datetime = "2025-03-19_10-47-56"
-filename_DD = f"../data/nextbike/hourly_demand_supply_Dresden {file_datetime}.csv"
-filename_FB = f"../data/nextbike/hourly_demand_supply_Freiburg {file_datetime}.csv"
+filename_DD = f"data/nextbike/hourly_demand_supply_Dresden {file_datetime}.csv"
+filename_FB = f"data/nextbike/hourly_demand_supply_Freiburg {file_datetime}.csv"
 df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
 df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
 
