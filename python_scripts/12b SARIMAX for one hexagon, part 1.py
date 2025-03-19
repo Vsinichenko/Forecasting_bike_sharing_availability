@@ -16,7 +16,7 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_fullpath = f"../output_part_1_DD_{start_time}.log"
+log_fullpath = f"logs/output_part_1_DD_{start_time}.log"
 
 # Configure logging
 logging.basicConfig(

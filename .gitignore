@@ -168,3 +168,4 @@ nextbike_original_data/
 .DS_Store
 tmp/
 /models
+/logs
