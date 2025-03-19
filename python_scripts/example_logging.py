@@ -2,7 +2,7 @@ import logging
 import sys
 from datetime import datetime
 
-start_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_fullpath = f"../example_logging_output_{start_time}.log"
 
 
@@ -12,9 +12,10 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
         logging.FileHandler(log_fullpath),
-        logging.StreamHandler(sys.stdout)  # Optional: still print to console
-    ]
+        logging.StreamHandler(sys.stdout),  # Optional: still print to console
+    ],
 )
+
 
 # Redirect stdout and stderr to logging
 class LoggerWriter:
@@ -28,6 +29,7 @@ class LoggerWriter:
 
     def flush(self):
         pass  # No need to flush manually
+
 
 sys.stdout = LoggerWriter(logging.info)
 sys.stderr = LoggerWriter(logging.error)  # Capture warnings and errors

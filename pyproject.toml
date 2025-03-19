@@ -25,6 +25,8 @@ contextily = "^1.6.2"
 plotly = "^6.0.0"
 nbformat = ">=4.2.0"
 h3 = "^4.2.2"
+pre-commit = "^4.2.0"
+nbstripout = "^0.8.1"
 
 
 [build-system]
