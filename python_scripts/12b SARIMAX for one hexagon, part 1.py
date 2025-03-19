@@ -11,6 +11,9 @@ import logging
 import sys
 from datetime import datetime
 from matplotlib import pyplot as plt
+import warnings
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_fullpath = f"../output_{start_time}.log"
@@ -132,7 +135,9 @@ test_1 = test_1.asfreq("h")
 start_train_time = time.time()
 logging.info("Start ARIMA optimisation")
 
-model_1 = auto_arima(y=train_1, trace=True, suppress_warnings=False, seasonal=True, m=24, n_jobs=-1)
+model_1 = auto_arima(
+    y=train_1, trace=True, suppress_warnings=False, seasonal=True, m=24, n_jobs=-1
+)
 model_1.fit(train_1)
 
 logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
