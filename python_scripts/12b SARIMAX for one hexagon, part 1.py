@@ -16,7 +16,7 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_fullpath = f"logs/output_part_1_DD_{start_time}.log"
+log_fullpath = f"logs/output_part_1_DD_stepwise_{start_time}.log"
 
 # Configure logging
 logging.basicConfig(
@@ -124,7 +124,7 @@ start_train_time = time.time()
 logging.info("Start ARIMA optimisation")
 
 # max_p=3, max_d=2, max_q=3,
-model_1 = auto_arima(y=train_1, trace=True, stepwise=False, suppress_warnings=False, seasonal=True, m=24, n_jobs=-1)
+model_1 = auto_arima(y=train_1, trace=True, stepwise=True, suppress_warnings=False, seasonal=True, m=24, n_jobs=-1)
 model_1.fit(train_1)
 
 logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
