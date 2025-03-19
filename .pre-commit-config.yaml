@@ -1,6 +1,11 @@
 repos:
 - repo: https://github.com/kynan/nbstripout
-  rev: f58c9e0488b2e10b7d528eee8e3266c736a2bd54
+  rev: 0.8.1
   hooks:
     - id: nbstripout
       files: ".ipynb"
+- repo: https://github.com/psf/black
+  rev: 25.1.0
+  hooks:
+    - id: black
+      language_version: python3.9
