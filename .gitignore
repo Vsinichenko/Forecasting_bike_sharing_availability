@@ -162,10 +162,9 @@ cython_debug/
 #.idea/
 
 # Custom added
-data/
-models/
 keys/
 /data
 nextbike_original_data/
 .DS_Store
 tmp/
+/models
