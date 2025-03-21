@@ -49,15 +49,9 @@ test_range_2_DD = pd.date_range(start="2024-10-21", end="2024-10-31")
 test_range_DD = test_range_1_DD.append(test_range_2_DD)
 
 test_range_DD = [date.date() for date in test_range_DD]
-train_validation_DD = df_DD.loc[
-    ~df_DD.datetime_30min.dt.date.isin(test_range_DD)
-].sort_values("datetime_30min")
-test_DD = df_DD.loc[df_DD.datetime_30min.dt.date.isin(test_range_DD)].sort_values(
-    "datetime_30min"
-)
-train_DD = train_validation_DD[train_validation_DD.hex_id == mycell].set_index(
-    "datetime_30min"
-)["rent_count"]
+train_validation_DD = df_DD.loc[~df_DD.datetime_30min.dt.date.isin(test_range_DD)].sort_values("datetime_30min")
+test_DD = df_DD.loc[df_DD.datetime_30min.dt.date.isin(test_range_DD)].sort_values("datetime_30min")
+train_DD = train_validation_DD[train_validation_DD.hex_id == mycell].set_index("datetime_30min")["rent_count"]
 
 start_train_time = time.time()
 
