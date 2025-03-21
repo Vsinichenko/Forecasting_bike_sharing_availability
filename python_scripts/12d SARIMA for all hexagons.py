@@ -71,7 +71,7 @@ df_DD_2 = df_DD.loc[df_DD.datetime_hour.dt.date > test_range_1_DD[-1]]
 
 flt = df_DD_1.datetime_hour.dt.date.isin(test_range_1_DD)
 train_validation_DD_1 = df_DD_1.loc[~flt]
-test_DD_1 = df_DD.loc[flt].sort_values("datetime_hour")
+test_DD_1 = df_DD_1.loc[flt].sort_values("datetime_hour")
 
 flt = df_DD_2.datetime_hour.dt.date.isin(test_range_2_DD)
 train_validation_DD_2 = df_DD_2.loc[~flt].sort_values("datetime_hour")
@@ -83,7 +83,7 @@ df_FB_2 = df_FB.loc[df_FB.datetime_hour.dt.date > test_range_1_FB[-1]]
 
 flt = df_FB_1.datetime_hour.dt.date.isin(test_range_1_FB)
 train_validation_FB_1 = df_FB_1.loc[~flt]
-test_FB_1 = df_FB.loc[flt].sort_values("datetime_hour")
+test_FB_1 = df_FB_1.loc[flt].sort_values("datetime_hour")
 
 flt = df_FB_2.datetime_hour.dt.date.isin(test_range_2_FB)
 train_validation_FB_2 = df_FB_2.loc[~flt].sort_values("datetime_hour")
