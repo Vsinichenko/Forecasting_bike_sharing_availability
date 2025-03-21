@@ -99,8 +99,9 @@ for city in ["DD"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
             for dep_var in ["demand", "supply"]:
-                model_name = f"models/sarima_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
-                if os.path.exists(model_name):
+                model_name = f"sarima_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
+                model_path = f"models/{model_name}"
+                if os.path.exists(model_path):
                     continue
 
                 logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
