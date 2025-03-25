@@ -151,5 +151,5 @@ if __name__ == "__main__":
 
     assert len(tasks) == 220, f"Incorrect number of tasks {len(tasks)}"
 
-    with mp.Pool(2) as pool:
+    with mp.Pool(num_cpus) as pool:
         pool.starmap(process_iteration, tasks)
