@@ -16,6 +16,9 @@ import os
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
+
+logging.info(f"Number of CPUs: {mp.cpu_count()}")
+
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_fullpath = f"logs/all_hexagons_arima_{start_time}.log"
 
@@ -101,6 +104,7 @@ def process_iteration(city, current_cell, part, dep_var):
     model_name = f"sarima_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
     model_path = f"models/{model_name}"
     if os.path.exists(model_path):
+        logging.info(f"Model {model_name} already exists. Skipping.")
         return
 
     logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
@@ -121,7 +125,7 @@ def process_iteration(city, current_cell, part, dep_var):
     logging.info("Start ARIMA optimisation")
 
     # max_p=3, max_d=2, max_q=3,
-    model = auto_arima(y=train, trace=True, stepwise=True, suppress_warnings=False, seasonal=True, m=24, n_jobs=-1, d=1, D=0, max_p=3, max_q=2)
+    model = auto_arima(y=train, trace=True, stepwise=True, suppress_warnings=False, seasonal=True, m=24, d=1, D=0, max_p=3, max_q=2)
 
     model.fit(train)
 
@@ -143,8 +147,8 @@ def process_iteration(city, current_cell, part, dep_var):
     logging.info(f"Model saved as {model_name}")
 
 
-tasks = [(city, current_cell, part, dep_var) for city in ["DD", "FB"] for current_cell in df_helper[city].hex_id.unique() for part in [1, 2] for dep_var in ["demand", "supply"]]
-logging.info(f"Number of CPUs: {mp.cpu_count()}")
+if __name__ == "__main__":
+    tasks = [(city, current_cell, part, dep_var) for city in ["DD", "FB"] for current_cell in df_helper[city].hex_id.unique() for part in [1, 2] for dep_var in ["demand", "supply"]]
 
-with mp.Pool() as pool:
-    pool.starmap(process_iteration, tasks)
+    with mp.Pool() as pool:
+        pool.starmap(process_iteration, tasks)
