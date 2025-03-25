@@ -12,6 +12,7 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 import warnings
 import os
+import gc
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -111,6 +112,8 @@ def process_iteration(city, current_cell, part, dep_var, df):
     with open(model_path, "wb") as pkl:
         pickle.dump(model, pkl)
     logging.info(f"Model saved as {model_name}")
+    del model, trian, test, train_df, test_df
+    gc.collect()
 
 
 if __name__ == "__main__":
@@ -148,5 +151,5 @@ if __name__ == "__main__":
 
     assert len(tasks) == 220, f"Incorrect number of tasks {len(tasks)}"
 
-    with mp.Pool(num_cpus) as pool:
+    with mp.Pool(2) as pool:
         pool.starmap(process_iteration, tasks)
