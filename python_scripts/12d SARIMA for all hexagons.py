@@ -95,7 +95,7 @@ dep_var_helper = {"demand": "rent_count", "supply": "return_count"}
 train_df_helper = {"DD": {1: train_validation_DD_1, 2: train_validation_DD_2}, "FB": {1: train_validation_FB_1, 2: train_validation_FB_2}}
 test_df_helper = {"DD": {1: test_DD_1, 2: test_DD_2}, "FB": {1: test_FB_1, 2: test_FB_2}}
 
-for city in ["DD"]:
+for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
             for dep_var in ["demand", "supply"]:
@@ -111,7 +111,11 @@ for city in ["DD"]:
                 train = train_df[train_df.hex_id == current_cell].set_index("datetime_hour")[dep_colname]
                 test = test_df[test_df.hex_id == current_cell].set_index("datetime_hour")[dep_colname]
 
-                train = train.asfreq("h")
+                if city == "FB" and part == 1:
+                    train = train.asfreq("h", fill_value=train.mean())
+                else:
+                    train = train.asfreq("h")
+
                 test = test.asfreq("h")
 
                 start_train_time = time.time()
@@ -135,6 +139,6 @@ for city in ["DD"]:
                 plt.savefig(f"tmp/{model_name}.png")
                 plt.close()
 
-                with open(model_name, "wb") as pkl:
+                with open(model_path, "wb") as pkl:
                     pickle.dump(model, pkl)
                 logging.info(f"Model saved as {model_name}")
