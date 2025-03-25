@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import multiprocessing as mp
 from pmdarima import auto_arima
 import pmdarima as pm
 import pandas as pd
@@ -16,11 +15,8 @@ import os
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
-num_cpus = mp.cpu_count()
-logging.info(f"Number of CPUs: {num_cpus}")
-
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_fullpath = f"logs/all_hexagons_arima_{start_time}.log"
+log_fullpath = f"logs/all_hexagons_arima_multi_{start_time}.log"
 
 # Configure logging
 logging.basicConfig(
@@ -118,6 +114,12 @@ def process_iteration(city, current_cell, part, dep_var, df):
 
 
 if __name__ == "__main__":
+    import multiprocessing as mp
+
+    num_cpus = mp.cpu_count()
+    logging.info(f"Number of CPUs: {num_cpus}")
+
+    logging.info("loading data")
     file_datetime = "2025-03-19_10-47-56"
     filename_FB = f"data/nextbike/hourly_demand_supply_Freiburg {file_datetime}.csv"
     df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
@@ -126,9 +128,25 @@ if __name__ == "__main__":
     df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
     df_helper = {"DD": df_DD, "FB": df_FB}
 
-    tasks = [(city, current_cell, part, df_helper[city]) for city in ["DD", "FB"] for current_cell in df_helper[city].hex_id.unique() for part in [1, 2] for dep_var in ["demand", "supply"]]
+    tasks = [
+        (city, current_cell, part, dep_var, df)
+        for city in ["DD", "FB"]
+        for current_cell in df_helper[city].hex_id.unique()
+        for part in [1, 2]
+        for dep_var in ["demand", "supply"]
+        for df in df_helper[city]
+    ]
 
-    print(tasks)
+    tasks_DD = [("DD", current_cell, part, dep_var, df_DD) for current_cell in df_DD.hex_id.unique() for part in [1, 2] for dep_var in ["demand", "supply"]]
 
-    # with mp.Pool(2) as pool:
-    #     pool.starmap(process_iteration, tasks)
+    logging.info(f"{len(tasks_DD)} tasks for DD")
+    tasks_FB = [("FB", current_cell, part, dep_var, df_FB) for current_cell in df_FB.hex_id.unique() for part in [1, 2] for dep_var in ["demand", "supply"]]
+
+    logging.info(f"{len(tasks_FB)} tasks for FB")
+    tasks = tasks_DD + tasks_FB
+    logging.info(f"{len(tasks)} tasks in total")
+
+    assert len(tasks) == 220, f"Incorrect number of tasks {len(tasks)}"
+
+    with mp.Pool(num_cpus) as pool:
+        pool.starmap(process_iteration, tasks)
