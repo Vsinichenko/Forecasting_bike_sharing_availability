@@ -4,8 +4,10 @@ import pandas as pd
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 import logging
+import warnings
 
-
+logging.basicConfig(level=logging.INFO)
+warnings.simplefilter(action="ignore", category=FutureWarning)
 logging.info("Reading data")
 
 file_datetime = "2025-03-19_10-47-56"
@@ -80,4 +82,5 @@ for city in ["DD", "FB"]:
                 rmse = sqrt(mean_squared_error(test, predictions))
                 rmse_collector[model_name] = rmse
 
-print(rmse_collector)
+for key, value in rmse_collector.items():
+    logging.info(f"{key}: {value}")
