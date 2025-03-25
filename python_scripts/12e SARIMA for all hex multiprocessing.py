@@ -119,8 +119,8 @@ def process_iteration(city, current_cell, part, dep_var, df):
 if __name__ == "__main__":
     import multiprocessing as mp
 
-    num_cpus = mp.cpu_count()
-    logging.info(f"Number of CPUs: {num_cpus}")
+    # num_cpus = mp.cpu_count()
+    # logging.info(f"Number of CPUs: {num_cpus}")
 
     logging.info("loading data")
     file_datetime = "2025-03-19_10-47-56"
@@ -151,5 +151,5 @@ if __name__ == "__main__":
 
     assert len(tasks) == 220, f"Incorrect number of tasks {len(tasks)}"
 
-    with mp.Pool(num_cpus) as pool:
+    with mp.Pool(15) as pool:
         pool.starmap(process_iteration, tasks)
