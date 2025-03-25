@@ -2,7 +2,7 @@ import os
 import pickle
 
 model_names = os.listdir("models")
-model_names = [path for path in model_names if path.endswith(".pkl")]
+model_names = [name for name in model_names if name.endswith(".pkl")]
 
 for model_name in model_names:
     model_path = os.path.join("models", model_name)
