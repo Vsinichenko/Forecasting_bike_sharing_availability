@@ -66,6 +66,7 @@ for city in ["DD", "FB"]:
                 model_name = f"sarima_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = f"models/{model_name}"
                 if not os.path.exists(model_path):
+                    logging.info(f"Model {model_name} missing")
                     continue
 
                 with open(model_path, "rb") as f:
