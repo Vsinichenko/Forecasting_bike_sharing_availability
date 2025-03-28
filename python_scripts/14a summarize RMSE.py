@@ -1,0 +1,36 @@
+import json
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+EXPERIMENT_NAME = "simple_HA"
+
+PLOTS = False
+
+
+with open(f"data/rmse/{EXPERIMENT_NAME}.json", "r") as f:
+    rmse = json.load(f)
+
+
+for phrase in ["DD_demand_", "DD_supply_", "FB_demand_", "FB_supply_"]:
+    new_index = [key for key in rmse.keys() if phrase in key]
+    # sort list alphabetically
+    new_index.sort()
+    new_values = [rmse[key] for key in new_index]
+    new_index = [key.replace(phrase, "") for key in new_index]
+
+    myseries = pd.Series(index=new_index, data=new_values)
+
+    if PLOTS:
+        plt.figure(figsize=(10, 5))
+        sns.barplot(myseries)
+        plt.xlabel("DD_demand")
+        plt.ylabel("RMSE")
+        plt.title(f"RMSE for {EXPERIMENT_NAME} for {phrase}")
+
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.show()
+
+    print(phrase)
+    print(myseries.sum().astype(int))
