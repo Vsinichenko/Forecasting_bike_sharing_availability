@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-EXPERIMENT_NAME = "sarima"
+EXPERIMENT_NAME = "simple_HA_hourly"
 
 PLOTS = False
 
@@ -38,4 +38,4 @@ for phrase in ["DD_demand_", "DD_supply_", "FB_demand_", "FB_supply_"]:
         plt.show()
 
     print(phrase)
-    print(myseries.sum().astype(int))
+    print(int(myseries.sum()))

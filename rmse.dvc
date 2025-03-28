@@ -1,0 +1,6 @@
+outs:
+- md5: a0956ca9ce4530509ae6926e0ef0ebca.dir
+  size: 62652
+  nfiles: 4
+  hash: md5
+  path: rmse

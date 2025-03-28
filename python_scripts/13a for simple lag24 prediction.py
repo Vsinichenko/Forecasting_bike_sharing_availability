@@ -13,7 +13,7 @@ logging.info("Reading data")
 
 mycell = "871f1b559ffffff"
 
-EXPERIMENT_NAME = "simple_lag24"
+EXPERIMENT_NAME = "simple_HA_hourly"
 
 file_datetime = "2025-03-19_10-47-56"
 filename_DD = f"data/nextbike/hourly_demand_supply_Dresden {file_datetime}.csv"
@@ -83,24 +83,20 @@ for city in ["DD", "FB"]:
                 train_validation = train_validation_df[train_validation_df.hex_id == current_cell].set_index("datetime_hour")[dep_colname]
 
                 if city == "FB" and part == 1:
-                    train_validation = train_validation.asfreq("h", fill_value=train_validation_df.mean())
+                    train_validation = train_validation.asfreq("h", fill_value=train_validation.mean())
                 else:
                     train_validation = train_validation.asfreq("h")
 
                 test = test.asfreq("h")
 
                 n_steps = len(test)
-                predictions = train_validation.copy()
-                predictions = predictions.shift(24)
-                predictions = predictions.iloc[-n_steps:]
-                predictions.index = test.index
-
-                print(test.iloc[:10])
-                print(predictions.iloc[:10])
+                predictions = pd.Series(index=test.index, dtype=float)
+                for hour in range(24):
+                    avg_houly_value = train_validation.loc[train_validation.index.hour == hour].mean()
+                    predictions.loc[predictions.index.hour == hour] = avg_houly_value
 
                 rmse = sqrt(mean_squared_error(test, predictions))
                 rmse_collector[model_name] = rmse
-                break
 
                 if city == "DD" and part == 1 and current_cell == mycell:
                     plt.figure(figsize=(10, 5))
@@ -110,7 +106,7 @@ for city in ["DD", "FB"]:
                     plt.ylabel("Rent count")
                     # plt.title(f"Rents and returns by minute on {day_str}")
                     plt.xticks(rotation=90)
-                    plt.savefig(f"../tmp/sample_lag24_prediction.png", bbox_inches="tight")
+                    plt.savefig(f"tmp/sample_lag24_prediction.png", bbox_inches="tight")
                     plt.legend()
                     plt.show()
 
@@ -119,5 +115,5 @@ for key, value in rmse_collector.items():
     logging.info(f"{key}: {value}")
 
 
-with open(f"../data/rmse/{EXPERIMENT_NAME}.json", "w") as f:
+with open(f"rmse/{EXPERIMENT_NAME}.json", "w") as f:
     json.dump(rmse_collector, f, indent=4)
