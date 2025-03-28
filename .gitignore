@@ -169,3 +169,4 @@ nextbike_original_data/
 tmp/
 /models
 /logs
+/rmse

@@ -83,6 +83,11 @@ for city in ["DD", "FB"]:
                 test = test.asfreq("h")
 
                 predictions = model.predict(n_periods=len(test))
+                flt = predictions < 0
+                if flt.any():
+                    logging.warning(f"Negative predictions for {model_name}")
+                    # set negative predictions to 0
+                    predictions[flt] = 0
 
                 rmse = sqrt(mean_squared_error(test, predictions))
                 rmse_collector[model_name] = rmse
@@ -91,5 +96,5 @@ for key, value in rmse_collector.items():
     logging.info(f"{key}: {value}")
 
 
-with open(f"data/rmse/{EXPERIMENT_NAME}.json", "w") as f:
+with open(f"rmse/{EXPERIMENT_NAME}.json", "w") as f:
     json.dump(rmse_collector, f, indent=4)

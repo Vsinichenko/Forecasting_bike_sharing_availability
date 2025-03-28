@@ -3,13 +3,18 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-EXPERIMENT_NAME = "simple_HA"
+EXPERIMENT_NAME = "sarima"
 
 PLOTS = False
 
 
-with open(f"data/rmse/{EXPERIMENT_NAME}.json", "r") as f:
+with open(f"rmse/{EXPERIMENT_NAME}.json", "r") as f:
     rmse = json.load(f)
+
+for key in rmse.keys():
+    if rmse[key] > 80:
+        print(key)
+        print(rmse[key])
 
 
 for phrase in ["DD_demand_", "DD_supply_", "FB_demand_", "FB_supply_"]:
