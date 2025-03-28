@@ -67,9 +67,10 @@ for city in ["DD", "FB"]:
         for part in [1, 2]:
             for dep_var in ["demand", "supply"]:
                 model_name = f"sarima_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
+                logging.info(f"Processing {model_name}")
                 model_path = f"models/{model_name}"
                 if not os.path.exists(model_path):
-                    logging.info(f"Model {model_name} missing")
+                    logging.error(f"Model {model_name} missing")
                     continue
 
                 with open(model_path, "rb") as f:
