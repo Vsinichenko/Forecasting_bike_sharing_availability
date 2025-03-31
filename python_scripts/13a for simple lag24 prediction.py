@@ -99,16 +99,18 @@ for city in ["DD", "FB"]:
                 rmse_collector[model_name] = rmse
 
                 if city == "DD" and part == 1 and current_cell == mycell:
-                    plt.figure(figsize=(10, 5))
+                    plt.figure(figsize=(10, 6))
                     sns.lineplot(data=test, label="Test data")
                     sns.lineplot(data=predictions, label="Predictions", linestyle="--")
                     plt.xlabel("Datetime hour")
                     plt.ylabel("Rent count")
                     # plt.title(f"Rents and returns by minute on {day_str}")
                     plt.xticks(rotation=90)
-                    plt.savefig(f"tmp/sample_lag24_prediction.png", bbox_inches="tight")
                     plt.legend()
-                    plt.show()
+                    plt.tight_layout()
+                    plt.savefig(f"/Users/v.sinichenko/Downloads/plots/sample_prediction/sample_simple_hourly_HA.png", bbox_inches="tight")
+
+                    break
 
 
 for key, value in rmse_collector.items():
