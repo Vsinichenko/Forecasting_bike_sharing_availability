@@ -2,7 +2,7 @@
 
 #SBATCH --ntasks=1                  
 #SBATCH --cpus-per-task=100                
-#SBATCH --mem=25G
+#SBATCH --mem=100G
 #SBATCH --time=10:00:00              
 #SBATCH --job-name=sarimax_calendar_FB          
 #SBATCH --output=logs/sarimax_calendar_FB-%j.out    
