@@ -12,16 +12,18 @@ import sys
 from datetime import datetime
 from matplotlib import pyplot as plt
 import warnings
-from sklearn.metrics import mean_squared_error
+
+# from sklearn.metrics import mean_squared_error
 import numpy as np
 import os
+import seaborn as sns
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 mycell = "871f1b559ffffff"
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_fullpath = f"logs/all_hexagons_arima_{start_time}.log"
+log_fullpath = f"logs/sarimax_calendar/sarimax_calendar_{start_time}.log"
 
 # Configure logging
 logging.basicConfig(
@@ -122,19 +124,20 @@ dep_var_helper = {"demand": "rent_count", "supply": "return_count"}
 train_df_helper = {"DD": {1: train_validation_DD_1, 2: train_validation_DD_2}, "FB": {1: train_validation_FB_1, 2: train_validation_FB_2}}
 test_df_helper = {"DD": {1: test_DD_1, 2: test_DD_2}, "FB": {1: test_FB_1, 2: test_FB_2}}
 
+model_dir = "models/sarimax_calendar"
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
+img_dir = "tmp/sarimax_calendar"
+if not os.path.exists(img_dir):
+    os.makedirs(img_dir)
+
+
 for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
             for dep_var in ["demand", "supply"]:
                 model_name = f"sarimax_calendar_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
-                model_dir = "models/sarimax_calendar"
-                if not os.path.exists(model_dir):
-                    os.makedirs(model_dir)
-
                 model_path = os.path.join(model_dir, model_name)
-
-                # if os.path.exists(model_path):
-                #     continue
 
                 logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
                 dep_colname = dep_var_helper[dep_var]
@@ -200,13 +203,21 @@ for city in ["DD", "FB"]:
                     logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
                     predictions = results.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
                     x = test_sr.index
-                    plt.plot(x, test_sr, color="black")
-                    plt.title(model_name)
-                    plt.scatter(x, predictions, color="yellow")
-                    plt.savefig(f"tmp/{time.time()}_{p}_{q}_{P}_{Q}.png")
-                    plt.close()
 
-                    rmse = np.sqrt(mean_squared_error(test_sr, predictions))
+                    plt.figure(figsize=(10, 5))
+                    sns.lineplot(data=test_sr, label="Test data")
+                    sns.lineplot(data=predictions, label="Predictions", linestyle="--")
+                    plt.xlabel("Datetime hour")
+                    plt.ylabel(dep_var_helper[dep_var].replace("_", " ").capitalize())
+                    plt.xticks(rotation=90)
+                    plt.legend()
+                    plt.tight_layout()
+
+                    img_filename = model_name.replace(".pkl", ".png")
+                    img_path = os.path.join(img_dir, img_filename)
+
+                    plt.savefig(img_path)
+                    plt.close()
 
                 except Exception as e:
                     continue
