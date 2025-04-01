@@ -31,7 +31,7 @@ log_dir = "logs/sarimax_calendar"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
-log_fullpath = os.join(log_dir, f"sarimax_calendar_{start_time}.log")
+log_fullpath = os.path.join(log_dir, f"sarimax_calendar_{start_time}.log")
 
 # Configure logging
 logging.basicConfig(
