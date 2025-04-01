@@ -73,6 +73,15 @@ filename_FB = f"data/nextbike/hourly_demand_supply_Freiburg {file_datetime}.csv"
 df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
 df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
 
+# # missing dates in between
+# missing_dates_DD = pd.date_range(start="2024-01-01", end="2024-09-02")
+# missing_dates_FB = pd.date_range(start="2023-08-01", end="2024-09-02")
+# missing_dates_DD = [date.date() for date in missing_dates_DD]
+# missing_dates_FB = [date.date() for date in missing_dates_FB]
+# df_DD = df_DD.loc[~df_DD.datetime_hour.dt.date.isin(missing_dates_DD)]
+# df_FB = df_FB.loc[~df_FB.datetime_hour.dt.date.isin(missing_dates_FB)]
+
+
 # test date ranges
 test_range_1_DD = pd.date_range(start="2024-03-21", end="2024-03-31")
 test_range_1_DD = [date.date() for date in test_range_1_DD]
@@ -146,7 +155,6 @@ img_dir = "tmp/sarimax_calendar"
 if not os.path.exists(img_dir):
     os.makedirs(img_dir)
 
-
 for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
@@ -205,41 +213,56 @@ for city in ["DD", "FB"]:
                 test_exog_df = test_df[exog_colnames]
 
                 if city == "FB" and part == 1:
-                    pass  # train_sr.asfreq("h", fill_value=train_sr.mean())
+                    train_sr = train_sr.asfreq("h", fill_value=train_sr.mean())
+                    train_exog_df = pd.DataFrame(index=train_sr.index)
+                    train_exog_df["weekday"] = train_exog_df.index.dayofweek
+                    train_exog_df["weekday"] = train_exog_df["weekday"].map({0: "Mon", 1: "Tue", 2: "Wed", 3: "Thu", 4: "Fri", 5: "Sat", 6: "Sun"})
+                    weekday_df = pd.get_dummies(train_exog_df["weekday"], prefix="weekday", drop_first=False, dtype=int)
+                    weekday_df.index = train_exog_df.index
+                    weekday_df.drop(columns="weekday_Mon", inplace=True)
+                    train_exog_df = pd.concat([train_exog_df, weekday_df], axis=1)
+
+                    train_exog_df["hour"] = train_exog_df.index.hour
+                    hours_df = pd.get_dummies(train_exog_df["hour"], prefix="hour", drop_first=False, dtype=int)
+                    hours_df.index = train_exog_df.index
+                    hours_df.drop(columns="hour_0", inplace=True)
+                    train_exog_df = pd.concat([train_exog_df, hours_df], axis=1)
+
+                    train_exog_df["is_dayoff"] = train_exog_df["weekday_Sat"] + train_exog_df["weekday_Sun"]
+
+                    flt = pd.Series(train_exog_df.index.date, index=train_exog_df.index).isin(german_holidays)
+                    train_exog_df.loc[flt, "is_dayoff"] = 1
+                    train_exog_df.drop(columns=["weekday", "hour"], inplace=True)
+
                 else:
                     train_sr = train_sr.asfreq("h")
 
                 start_train_time = time.time()
+                print(len(train_sr), len(train_exog_df), len(test_sr), len(test_exog_df))
 
-                try:
-                    model = SARIMAX(endog=train_sr, exog=train_exog_df, order=(1, 1, 1), seasonal_order=(1, 0, 1, 24), freq="h")
-                    results = model.fit()
-                    # print model summary
+                model = SARIMAX(endog=train_sr, exog=train_exog_df, order=(1, 1, 1), seasonal_order=(1, 0, 1, 24), freq="h")
+                results = model.fit()
+                # print model summary
 
-                    logging.info(results.summary())
+                logging.info(results.summary())
 
-                    logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
-                    predictions = results.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
-                    x = test_sr.index
+                logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
+                predictions = results.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
 
-                    plt.figure(figsize=(10, 5))
-                    sns.lineplot(data=test_sr, label="Test data")
-                    sns.lineplot(data=predictions, label="Predictions", linestyle="--")
-                    plt.xlabel("Datetime hour")
-                    plt.ylabel(dep_var_helper[dep_var].replace("_", " ").capitalize())
-                    plt.xticks(rotation=90)
-                    plt.legend()
-                    plt.tight_layout()
+                plt.figure(figsize=(10, 5))
+                sns.lineplot(data=test_sr, label="Test data")
+                sns.lineplot(data=predictions, label="Predictions", linestyle="--")
+                plt.xlabel("Datetime hour")
+                plt.ylabel(dep_var_helper[dep_var].replace("_", " ").capitalize())
+                plt.xticks(rotation=90)
+                plt.legend()
+                plt.tight_layout()
 
-                    img_filename = model_name.replace(".pkl", ".png")
-                    img_path = os.path.join(img_dir, img_filename)
+                img_filename = model_name.replace(".pkl", ".png")
+                img_path = os.path.join(img_dir, img_filename)
 
-                    plt.savefig(img_path)
-                    plt.close()
-
-                except Exception as e:
-                    logging.error(f"Error occurred while fitting the model: {e}")
-                    continue
+                plt.savefig(img_path)
+                plt.close()
 
                 with open(model_path, "wb") as pkl:
                     pickle.dump(model, pkl)
