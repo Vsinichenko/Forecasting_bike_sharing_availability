@@ -24,7 +24,8 @@ import seaborn as sns
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dep_var", type=str, choices=["demand", "supply"], required=True, help="Dependent variable")
+# add default value
+parser.add_argument("--dep_var", type=str, choices=["demand", "supply"], default="demand", help="Dependent variable to predict")
 args = parser.parse_args()
 
 
@@ -201,10 +202,10 @@ for city in ["DD", "FB"]:
                 test_sr = test_df[dep_colname]
                 test_exog_df = test_df[exog_colnames]
 
-                if city == "FB" and part == 1:
-                    train_sr = train_sr.asfreq("h", fill_value=train_sr.mean())
-                else:
-                    train_sr = train_sr.asfreq("h")
+                # if city == "FB" and part == 1:
+                #     train_sr = train_sr.asfreq("h", fill_value=train_sr.mean())
+                # else:
+                #     train_sr = train_sr.asfreq("h")
 
                 start_train_time = time.time()
 
