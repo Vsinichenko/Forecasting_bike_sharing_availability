@@ -1,15 +1,15 @@
 #!/bin/bash
 
-#SBATCH --ntasks=1                   # #SBATCH lines request resources and
-#SBATCH --cpus-per-task=4                 # #SBATCH lines request resources and
-#SBATCH --mem=50G
-#SBATCH --time=05:00:00               # specify Slurm options
-#SBATCH --job-name=sarima_all          # All #SBATCH lines have to follow uninterrupted
-#SBATCH --output=tmp/sarima_all-%j.out    # after the shebang line
-#SBATCH --error=tmp/sarima_all-%j.err     # Comments start with # and do not count as interruptions
+#SBATCH --ntasks=1                  
+#SBATCH --cpus-per-task=100                
+#SBATCH --mem=25G
+#SBATCH --time=10:00:00              
+#SBATCH --job-name=sarimax_calendar_FB          
+#SBATCH --output=logs/sarimax_calendar_FB-%j.out    
+#SBATCH --error=logs/sarimax_calendar_FB-%j.err     
 
 source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda activate FBSfor_arima
 
-python "python_scripts/12d SARIMA for all hexagons.py"
+python "python_scripts/16c SARIMAX wth weather and calendar for all hex.py"

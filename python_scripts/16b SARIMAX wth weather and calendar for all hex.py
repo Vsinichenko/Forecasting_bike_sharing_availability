@@ -13,6 +13,8 @@ import sys
 from datetime import datetime
 from matplotlib import pyplot as plt
 import warnings
+import argparse
+
 
 # from sklearn.metrics import mean_squared_error
 import numpy as np
@@ -20,6 +22,11 @@ import os
 import seaborn as sns
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--dep_var", type=str, choices=["demand", "supply"], required=True, help="Dependent variable")
+args = parser.parse_args()
+
 
 mycell = "871f1b559ffffff"
 
@@ -136,7 +143,7 @@ if not os.path.exists(img_dir):
 for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
-            for dep_var in ["demand", "supply"]:
+            for dep_var in [args.dep_var]:
                 model_name = f"sarimax_calendar_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = os.path.join(model_dir, model_name)
                 if os.path.exists(model_path):
