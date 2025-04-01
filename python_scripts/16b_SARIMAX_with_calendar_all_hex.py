@@ -235,6 +235,7 @@ for city in ["DD", "FB"]:
                     plt.close()
 
                 except Exception as e:
+                    logging.error(f"Error occurred while fitting the model: {e}")
                     continue
 
                 with open(model_path, "wb") as pkl:

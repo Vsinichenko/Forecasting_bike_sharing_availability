@@ -85,4 +85,4 @@ for city in ["DD", "FB"]:
                 model_name = f"sarimax_calendar_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = os.path.join(model_dir, model_name)
                 if not os.path.exists(model_path):
-                    logging.info(f"Model {model_name} already missing")
+                    logging.info(f"Model {model_name} is missing")
