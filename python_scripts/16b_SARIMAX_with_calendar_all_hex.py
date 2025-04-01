@@ -25,8 +25,10 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 parser = argparse.ArgumentParser()
 # add default value
-parser.add_argument("--dep_var", type=str, choices=["demand", "supply"], default="demand", help="Dependent variable to predict")
+parser.add_argument("--dep_var", type=str, choices=["demand", "supply", "demand_supply"], default="demand_supply", help="Dependent variable to predict")
 args = parser.parse_args()
+
+dep_var_ls = ["demand", "supply"] if args.dep_var == "demand_supply" else [args.dep_var]
 
 
 mycell = "871f1b559ffffff"
@@ -148,7 +150,7 @@ if not os.path.exists(img_dir):
 for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
-            for dep_var in [args.dep_var]:
+            for dep_var in dep_var_ls:
                 model_name = f"sarimax_calendar_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = os.path.join(model_dir, model_name)
                 if os.path.exists(model_path):
@@ -202,10 +204,10 @@ for city in ["DD", "FB"]:
                 test_sr = test_df[dep_colname]
                 test_exog_df = test_df[exog_colnames]
 
-                # if city == "FB" and part == 1:
-                #     train_sr = train_sr.asfreq("h", fill_value=train_sr.mean())
-                # else:
-                #     train_sr = train_sr.asfreq("h")
+                if city == "FB" and part == 1:
+                    pass  # train_sr.asfreq("h", fill_value=train_sr.mean())
+                else:
+                    train_sr = train_sr.asfreq("h")
 
                 start_train_time = time.time()
 
