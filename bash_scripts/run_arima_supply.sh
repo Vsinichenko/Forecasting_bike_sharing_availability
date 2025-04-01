@@ -12,4 +12,4 @@ source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda activate FBSfor_arima
 
-python "python_scripts/16c SARIMAX wth weather and calendar for all hex mult.py" --dep_var supply
+python "python_scripts/16b SARIMAX wth weather and calendar for all hex.py" --dep_var supply
