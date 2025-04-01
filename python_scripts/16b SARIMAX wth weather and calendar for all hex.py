@@ -133,7 +133,7 @@ if not os.path.exists(img_dir):
     os.makedirs(img_dir)
 
 
-for city in ["FB"]:
+for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
             for dep_var in ["demand", "supply"]:
