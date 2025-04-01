@@ -4,6 +4,7 @@
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 # import pmdarima.arima as pm_arima
+import gc
 import pandas as pd
 import time
 import pickle
@@ -132,7 +133,7 @@ if not os.path.exists(img_dir):
     os.makedirs(img_dir)
 
 
-for city in ["DD", "FB"]:
+for city in ["FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
             for dep_var in ["demand", "supply"]:
@@ -228,3 +229,5 @@ for city in ["DD", "FB"]:
                 with open(model_path, "wb") as pkl:
                     pickle.dump(model, pkl)
                 logging.info(f"Model saved as {model_name}")
+                del model, results, train_df, test_df, train_sr, test_sr, train_exog_df, test_exog_df
+                gc.collect()

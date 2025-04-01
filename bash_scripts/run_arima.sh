@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#SBATCH --ntasks=1                   # #SBATCH lines request resources and
-#SBATCH --cpus-per-task=15                 # #SBATCH lines request resources and
-#SBATCH --mem=200G
-#SBATCH --time=10:00:00               # specify Slurm options
-#SBATCH --job-name=sarimax_calendar_          # All #SBATCH lines have to follow uninterrupted
-#SBATCH --output=logs/sarimax_calendar_-%j.out    # after the shebang line
-#SBATCH --error=logs/sarimax_calendar_-%j.err     # Comments start with # and do not count as interruptions
+#SBATCH --ntasks=1                  
+#SBATCH --cpus-per-task=100                
+#SBATCH --mem=100G
+#SBATCH --time=10:00:00              
+#SBATCH --job-name=sarimax_calendar_          
+#SBATCH --output=logs/sarimax_calendar_FB-%j.out    
+#SBATCH --error=logs/sarimax_calendar_FB-%j.err     
 
 source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
