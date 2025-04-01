@@ -31,7 +31,11 @@ args = parser.parse_args()
 mycell = "871f1b559ffffff"
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_fullpath = f"logs/sarimax_calendar/sarimax_calendar_{start_time}.log"
+log_dir = "logs/sarimax_calendar"
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+log_fullpath = os.join(log_dir, f"sarimax_calendar_{start_time}.log")
 
 # Configure logging
 logging.basicConfig(
