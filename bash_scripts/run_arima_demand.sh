@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #SBATCH --ntasks=1                  
-#SBATCH --cpus-per-task=200                
+#SBATCH --cpus-per-task=100                
 #SBATCH --mem=100G
 #SBATCH --time=10:00:00              
-#SBATCH --job-name=sarimax_calendar_demand         
-#SBATCH --output=logs/sarimax_calendar_demand-%j.out    
-#SBATCH --error=logs/sarimax_calendar_demand-%j.err     
+#SBATCH --job-name=sarimax_calendar_          
+#SBATCH --output=logs/sarimax_calendar_-%j.out    
+#SBATCH --error=logs/sarimax_calendar_-%j.err     
 
 source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
