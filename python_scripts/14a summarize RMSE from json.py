@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-EXPERIMENT_NAME = "simple_HA_hourly"
+EXPERIMENT_NAME = "sarimax_calendar"
 
 PLOTS = False
 
@@ -12,12 +12,12 @@ with open(f"rmse/{EXPERIMENT_NAME}.json", "r") as f:
     rmse = json.load(f)
 
 for key in rmse.keys():
-    if rmse[key] > 80:
+    if rmse[key] > 30:
         print(key)
         print(rmse[key])
 
 
-for phrase in ["DD_demand_", "DD_supply_", "FB_demand_", "FB_supply_"]:
+for phrase in ["DD_demand_", "FB_demand_", "DD_supply_", "FB_supply_"]:
     new_index = [key for key in rmse.keys() if phrase in key]
     # sort list alphabetically
     new_index.sort()
