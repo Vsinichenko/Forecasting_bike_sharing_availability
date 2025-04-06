@@ -77,6 +77,8 @@ filename_DD = f"data/nextbike/hourly_demand_supply_Dresden 2025-03-19_10-47-56.c
 filename_FB = f"data/nextbike/hourly_demand_supply_Freiburg_missing_interpolated_2025-03-19_10-47-56.csv"
 df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
 df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
+df_DD = df_DD.sort_values("datetime_hour")
+df_FB = df_FB.sort_values("datetime_hour")
 
 
 # test date ranges
@@ -215,6 +217,9 @@ for city in city_ls:
 
                 start_train_time = time.time()
                 print(len(train_sr), len(train_exog_df), len(test_sr), len(test_exog_df))
+
+                train_sr.to_csv("train_sr.csv")
+                train_exog_df.to_csv("train_exog_df.csv")
 
                 model = SARIMAX(endog=train_sr, exog=train_exog_df, order=(1, 1, 1), seasonal_order=(1, 0, 1, 24), freq="h")
                 model_fit = model.fit()
