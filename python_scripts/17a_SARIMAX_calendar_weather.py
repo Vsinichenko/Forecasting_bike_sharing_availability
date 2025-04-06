@@ -17,7 +17,7 @@ import argparse
 import os
 import seaborn as sns
 
-EXPERIMENT_NAME = "sarimax_calendar"
+EXPERIMENT_NAME = "sarimax_calendar_weather"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -25,11 +25,11 @@ parser = argparse.ArgumentParser()
 # add default value
 parser.add_argument("--depvar", type=str, choices=["demand", "supply", "demand_supply"], default="demand_supply", help="Dependent variable to predict")
 parser.add_argument("--part", type=str, choices=["1_2", "1", "2"], default="1_2", help="Part")
-parser.add_argument("--city", type=str, choices=["DD_FB", "DD", "FB"], default="1_2", help="City")
+parser.add_argument("--city", type=str, choices=["DD_FB", "DD", "FB"], default="DD_FB", help="City")
 args = parser.parse_args()
 dep_var_ls = ["demand", "supply"] if args.depvar == "demand_supply" else [args.depvar]
 part_ls = [1, 2] if args.part == "1_2" else [int(args.part)]
-city_ls = ["DD", "FB"] if args.city == "DD_FB" else [args.city]
+city_ls = ["FB", "DD"] if args.city == "DD_FB" else [args.city]
 
 mycell = "871f1b559ffffff"
 
@@ -44,7 +44,7 @@ img_dir = f"tmp/images/{EXPERIMENT_NAME}"
 if not os.path.exists(img_dir):
     os.makedirs(img_dir)
 
-log_fullpath = os.path.join(log_dir, f"sarimax_calendar_{start_time}.log")
+log_fullpath = os.path.join(log_dir, f"model_{start_time}.log")
 
 # Configure logging
 logging.basicConfig(
@@ -80,6 +80,22 @@ df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
 df_DD = df_DD.sort_values("datetime_hour")
 df_FB = df_FB.sort_values("datetime_hour")
 
+filename_weather_DD = "data/weather/df_Dresden_weather_hourly 2025-03-28_20-51-37.csv"
+filename_weather_FB = "data/weather/df_Freiburg_weather_hourly 2025-03-28_20-51-37.csv"
+
+df_weather_DD = pd.read_csv(filename_weather_DD, index_col=None, parse_dates=["datetime_hour"])
+df_weather_FB = pd.read_csv(filename_weather_FB, index_col=None, parse_dates=["datetime_hour"])
+
+df_weather_DD = df_weather_DD.drop(columns=["Precipitation", "Wind"])
+df_weather_FB = df_weather_FB.drop(columns=["Precipitation", "Wind"])
+
+df_weather_DD["Temperature_times_Humidity"] = df_weather_DD["Temperature"] * df_weather_DD["Humidity"]
+df_weather_FB["Temperature_times_Humidity"] = df_weather_FB["Temperature"] * df_weather_FB["Humidity"]
+
+
+df_DD = df_DD.merge(df_weather_DD, on="datetime_hour", how="left")
+df_FB = df_FB.merge(df_weather_FB, on="datetime_hour", how="left")
+
 
 # test date ranges
 test_range_1_DD = pd.date_range(start="2024-03-21", end="2024-03-31")
@@ -94,17 +110,7 @@ test_range_1_FB = [date.date() for date in test_range_1_FB]
 test_range_2_FB = pd.date_range(start="2024-10-23", end="2024-10-31")
 test_range_2_FB = [date.date() for date in test_range_2_FB]
 
-
-## Fill missing values of FB
-
-# # missing dates in between
-# missing_dates_FB = [date.date() for date in missing_dates_FB]
-# df_DD = df_DD.loc[~df_DD.datetime_hour.dt.date.isin(missing_dates_DD)]
-# df_FB = df_FB.loc[~df_FB.datetime_hour.dt.date.isin(missing_dates_FB)]
-
-
-## slice dataframes
-# DD
+## calendar effects
 for df_tmp in [df_DD, df_FB]:
     df_tmp["weekday"] = df_tmp.datetime_hour.dt.dayofweek
     df_tmp["weekday"] = df_tmp["weekday"].map({0: "Mon", 1: "Tue", 2: "Wed", 3: "Thu", 4: "Fri", 5: "Sat", 6: "Sun"})
@@ -160,6 +166,7 @@ for city in city_ls:
     for current_cell in df_helper[city].hex_id.unique():
         for part in part_ls:
             for dep_var in dep_var_ls:
+
                 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = os.path.join(model_dir, model_name)
                 if os.path.exists(model_path):
@@ -175,6 +182,7 @@ for city in city_ls:
                 test_df = test_df.loc[test_df.hex_id == current_cell].set_index("datetime_hour")
 
                 train_sr = train_df[dep_colname]
+
                 exog_colnames = [
                     "hour_1",
                     "hour_2",
@@ -206,6 +214,9 @@ for city in city_ls:
                     "weekday_Sat",
                     "weekday_Sun",
                     "is_dayoff",
+                    "Temperature",
+                    "Humidity",
+                    "Temperature_times_Humidity",
                 ]
 
                 train_exog_df = train_df[exog_colnames]
@@ -216,19 +227,19 @@ for city in city_ls:
                 train_sr = train_sr.asfreq("h")
 
                 start_train_time = time.time()
-                print(len(train_sr), len(train_exog_df), len(test_sr), len(test_exog_df))
+                # print(len(train_sr), len(train_exog_df), len(test_sr), len(test_exog_df))
 
-                train_sr.to_csv("train_sr.csv")
-                train_exog_df.to_csv("train_exog_df.csv")
+                # train_sr.to_csv("train_sr.csv")
+                # train_exog_df.to_csv("train_exog_df.csv")
 
                 model = SARIMAX(endog=train_sr, exog=train_exog_df, order=(1, 1, 1), seasonal_order=(1, 0, 1, 24), freq="h")
                 model_fit = model.fit()
-                # print model summary
 
                 logging.info(model_fit.summary())
 
                 logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
                 predictions = model_fit.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
+                predictions[predictions < 0] = 0
 
                 plt.figure(figsize=(8, 5))  # 10, 5 was too wide
                 sns.lineplot(data=test_sr, label="Test data")
