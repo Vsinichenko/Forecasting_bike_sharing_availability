@@ -158,7 +158,7 @@ for city in city_ls:
     for current_cell in df_helper[city].hex_id.unique():
         for part in part_ls:
             for dep_var in dep_var_ls:
-                model_name = f"sarimax_calendar_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
+                model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = os.path.join(model_dir, model_name)
                 if os.path.exists(model_path):
                     logging.info(f"Model {model_name} already exists. Skipping...")

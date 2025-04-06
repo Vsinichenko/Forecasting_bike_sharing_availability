@@ -34,18 +34,16 @@ args = parser.parse_args()
 
 dep_var_ls = ["demand", "supply"] if args.dep_var == "demand_supply" else [args.dep_var]
 
-mycell = "871f1b559ffffff"
-
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_dir = "logs/sarimax_calendar"
+log_dir = f"logs/{EXPERIMENT_NAME}"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
-model_dir = "models/{EXPERIMENT_NAME}"
+model_dir = f"models/{EXPERIMENT_NAME}"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
 
-log_fullpath = os.path.join(log_dir, f"sarimax_calendar_{start_time}.log")
+log_fullpath = os.path.join(log_dir, f"{start_time}.log")
 
 # Configure logging
 logging.basicConfig(
@@ -153,7 +151,7 @@ for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
             for dep_var in dep_var_ls:
-                model_name = f"sarimax_calendar_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
+                model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
 
                 model_path = os.path.join(model_dir, model_name)
