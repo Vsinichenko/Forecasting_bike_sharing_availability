@@ -12,6 +12,7 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 import warnings
 import argparse
+import os
 import json
 
 EXPERIMENT_NAME = "sarimax_calendar_weather"
