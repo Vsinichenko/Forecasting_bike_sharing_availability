@@ -233,6 +233,7 @@ for city in city_ls:
 
                 # print model summary
                 predictions = model_fit.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
+                predictions[predictions < 0] = 0
 
                 rmse = sqrt(mean_squared_error(test_sr, predictions))
                 rmse_collector[model_name] = rmse
