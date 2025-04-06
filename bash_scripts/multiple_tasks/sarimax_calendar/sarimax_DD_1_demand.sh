@@ -4,9 +4,9 @@
 #SBATCH --cpus-per-task=100                
 #SBATCH --mem=10G
 #SBATCH --time=10:00:00              
-#SBATCH --job-name=sarimax_calendar_          
-#SBATCH --output=logs/sarimax_calendar_-%j.out    
-#SBATCH --error=logs/sarimax_calendar_-%j.err     
+#SBATCH --job-name=DD_1_demand          
+#SBATCH --output=logs/sarimax_calendar_DD_1_demand_-%j.out    
+#SBATCH --error=logs/sarimax_calendar_DD_1_demand_-%j.err     
 
 source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 

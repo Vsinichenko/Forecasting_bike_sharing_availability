@@ -147,9 +147,6 @@ test_df_helper = {"DD": {1: test_DD_1, 2: test_DD_2}, "FB": {1: test_FB_1, 2: te
 model_dir = "models/sarimax_calendar"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
-img_dir = "tmp/sarimax_calendar"
-if not os.path.exists(img_dir):
-    os.makedirs(img_dir)
 
 rmse_collector = {}
 
@@ -217,23 +214,9 @@ for city in ["DD", "FB"]:
                 # print model summary
                 predictions = model.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
 
-                if dep_var == "demand" and city == "DD" and part == 1 and current_cell == mycell:
-                    plt.figure(figsize=(8, 5))
-                    sns.lineplot(data=test_sr, label="Test data")
-                    sns.lineplot(data=predictions, label="Predictions", linestyle="--")
-                    plt.xlabel("Datetime hour")
-                    plt.ylabel(dep_var_helper[dep_var].replace("_", " ").capitalize())
-                    plt.xticks(rotation=90)
-                    plt.legend()
-                    plt.tight_layout()
-                    img_filename = model_name.replace(".pkl", ".png")
-                    img_path = os.path.join("sample_sarimax_calendar")
-                    plt.savefig(img_path)
-                    plt.close()
-
                 logging.info(f"Model saved as {model_name}")
 
-                rmse = sqrt(mean_squared_error(test, predictions))
+                rmse = sqrt(mean_squared_error(test_sr, predictions))
                 rmse_collector[model_name] = rmse
 
 for key, value in rmse_collector.items():

@@ -19,7 +19,10 @@ for city in city_ls:
         for depvar in depvar_ls:
             added_part = f" --city {city} --part {part} --depvar {depvar}"
             adj_script = script_content + added_part
-            goal_file_path = os.path.join(goal_dir, f"sarimax_{city}_{part}_{depvar}.sh")
+            current_task_name = f"{city}_{part}_{depvar}"
+            adj_script = adj_script.replace("TASK_NAME", current_task_name)
+
+            goal_file_path = os.path.join(goal_dir, f"sarimax_{current_task_name}.sh")
 
             with open(goal_file_path, "w") as f:
                 f.write(adj_script)
