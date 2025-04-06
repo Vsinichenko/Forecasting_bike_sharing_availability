@@ -94,7 +94,7 @@ test_range_2_FB = [date.date() for date in test_range_2_FB]
 
 ## slice dataframes
 # DD
-for df_tmp in [df_DD, df_FB]:
+for i, df_tmp in enumerate([df_DD, df_FB]):
     df_tmp["weekday"] = df_tmp.datetime_hour.dt.dayofweek
     df_tmp["weekday"] = df_tmp["weekday"].map({0: "Mon", 1: "Tue", 2: "Wed", 3: "Thu", 4: "Fri", 5: "Sat", 6: "Sun"})
     weekday_df = pd.get_dummies(df_tmp["weekday"], prefix="weekday", drop_first=False, dtype=int)
@@ -109,7 +109,11 @@ for df_tmp in [df_DD, df_FB]:
     df_tmp[hours_df.columns] = hours_df
     df_tmp["is_dayoff"] = df_tmp["weekday_Sat"] + df_tmp["weekday_Sun"]
     # list of german holidays in 2023 and 2024
-    german_holidays = ["2024-01-01", "2024-03-20", "2024-09-20", "2024-10-03", "2023-06-08"]
+    if i == 0:
+        # holidays for Dresden
+        german_holidays = ["2024-01-01", "2024-03-29", "2024-04-01", "2024-05-01", "2024-05-09", "2024-05-20", "2024-10-03", "2024-10-31"]
+    else:
+        german_holidays = ["2023-06-08", "2024-10-03"]
     german_holidays = [pd.to_datetime(date).date() for date in german_holidays]
     flt = df_tmp.datetime_hour.dt.date.isin(german_holidays)
     len(df_tmp[flt])

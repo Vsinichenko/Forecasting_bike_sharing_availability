@@ -166,6 +166,42 @@ dep_var_helper = {"demand": "rent_count", "supply": "return_count"}
 train_df_helper = {"DD": {1: train_validation_DD_1, 2: train_validation_DD_2}, "FB": {1: train_validation_FB_1, 2: train_validation_FB_2}}
 test_df_helper = {"DD": {1: test_DD_1, 2: test_DD_2}, "FB": {1: test_FB_1, 2: test_FB_2}}
 
+exog_colnames = [
+    "hour_1",
+    "hour_2",
+    "hour_3",
+    "hour_4",
+    "hour_5",
+    "hour_6",
+    "hour_7",
+    "hour_8",
+    "hour_9",
+    "hour_10",
+    "hour_11",
+    "hour_12",
+    "hour_13",
+    "hour_14",
+    "hour_15",
+    "hour_16",
+    "hour_17",
+    "hour_18",
+    "hour_19",
+    "hour_20",
+    "hour_21",
+    "hour_22",
+    "hour_23",
+    "weekday_Tue",
+    "weekday_Wed",
+    "weekday_Thu",
+    "weekday_Fri",
+    "weekday_Sat",
+    "weekday_Sun",
+    "is_dayoff",
+    "Temperature",
+    "Humidity",
+    "Temperature_times_Humidity",
+]
+
 for city in city_ls:
     for current_cell in df_helper[city].hex_id.unique():
         for part in part_ls:
@@ -186,42 +222,6 @@ for city in city_ls:
                 test_df = test_df.loc[test_df.hex_id == current_cell].set_index("datetime_hour")
 
                 train_sr = train_df[dep_colname]
-
-                exog_colnames = [
-                    "hour_1",
-                    "hour_2",
-                    "hour_3",
-                    "hour_4",
-                    "hour_5",
-                    "hour_6",
-                    "hour_7",
-                    "hour_8",
-                    "hour_9",
-                    "hour_10",
-                    "hour_11",
-                    "hour_12",
-                    "hour_13",
-                    "hour_14",
-                    "hour_15",
-                    "hour_16",
-                    "hour_17",
-                    "hour_18",
-                    "hour_19",
-                    "hour_20",
-                    "hour_21",
-                    "hour_22",
-                    "hour_23",
-                    "weekday_Tue",
-                    "weekday_Wed",
-                    "weekday_Thu",
-                    "weekday_Fri",
-                    "weekday_Sat",
-                    "weekday_Sun",
-                    "is_dayoff",
-                    "Temperature",
-                    "Humidity",
-                    "Temperature_times_Humidity",
-                ]
 
                 train_exog_df = train_df[exog_colnames]
 
