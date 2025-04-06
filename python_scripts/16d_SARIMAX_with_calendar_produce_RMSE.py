@@ -34,13 +34,16 @@ args = parser.parse_args()
 
 dep_var_ls = ["demand", "supply"] if args.dep_var == "demand_supply" else [args.dep_var]
 
-
 mycell = "871f1b559ffffff"
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_dir = "logs/sarimax_calendar"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
+model_dir = "models/{EXPERIMENT_NAME}"
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
+
 
 log_fullpath = os.path.join(log_dir, f"sarimax_calendar_{start_time}.log")
 
@@ -144,10 +147,6 @@ dep_var_helper = {"demand": "rent_count", "supply": "return_count"}
 train_df_helper = {"DD": {1: train_validation_DD_1, 2: train_validation_DD_2}, "FB": {1: train_validation_FB_1, 2: train_validation_FB_2}}
 test_df_helper = {"DD": {1: test_DD_1, 2: test_DD_2}, "FB": {1: test_FB_1, 2: test_FB_2}}
 
-model_dir = "models/sarimax_calendar"
-if not os.path.exists(model_dir):
-    os.makedirs(model_dir)
-
 rmse_collector = {}
 
 for city in ["DD", "FB"]:
@@ -163,7 +162,7 @@ for city in ["DD", "FB"]:
                     continue
 
                 with open(model_path, "rb") as f:
-                    model = pickle.load(f)
+                    model_fit = pickle.load(f)
 
                 dep_colname = dep_var_helper[dep_var]
                 train_df = train_df_helper[city][part]
@@ -212,9 +211,7 @@ for city in ["DD", "FB"]:
                 test_exog_df = test_df[exog_colnames]
 
                 # print model summary
-                predictions = model.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
-
-                logging.info(f"Model saved as {model_name}")
+                predictions = model_fit.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
 
                 rmse = sqrt(mean_squared_error(test_sr, predictions))
                 rmse_collector[model_name] = rmse
