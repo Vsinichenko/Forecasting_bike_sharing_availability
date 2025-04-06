@@ -162,9 +162,9 @@ for city in city_ls:
             for dep_var in dep_var_ls:
                 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = os.path.join(model_dir, model_name)
-                # if os.path.exists(model_path):
-                #     logging.info(f"Model {model_name} already exists. Skipping...")
-                #     continue
+                if os.path.exists(model_path):
+                    logging.info(f"Model {model_name} already exists. Skipping...")
+                    continue
 
                 logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
                 dep_colname = dep_var_helper[dep_var]
