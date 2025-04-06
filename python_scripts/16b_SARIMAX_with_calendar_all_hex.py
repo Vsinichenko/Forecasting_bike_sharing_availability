@@ -23,11 +23,11 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 parser = argparse.ArgumentParser()
 # add default value
-parser.add_argument("--dep_var", type=str, choices=["demand", "supply", "demand_supply"], default="demand_supply", help="Dependent variable to predict")
+parser.add_argument("--depvar", type=str, choices=["demand", "supply", "demand_supply"], default="demand_supply", help="Dependent variable to predict")
 parser.add_argument("--part", type=str, choices=["1_2", "1", "2"], default="1_2", help="Part")
 parser.add_argument("--city", type=str, choices=["DD_FB", "DD", "FB"], default="1_2", help="City")
 args = parser.parse_args()
-dep_var_ls = ["demand", "supply"] if args.dep_var == "demand_supply" else [args.dep_var]
+dep_var_ls = ["demand", "supply"] if args.depvar == "demand_supply" else [args.depvar]
 part_ls = [1, 2] if args.part == "1_2" else [int(args.part)]
 city_ls = ["DD", "FB"] if args.city == "DD_FB" else [args.city]
 

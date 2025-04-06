@@ -12,4 +12,4 @@ source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda activate FBSfor_arima
 
-python "python_scripts/16b_SARIMAX_with_calendar_all_hex.py"  --city DD --part 2 --dep-var demand
+python "python_scripts/16b_SARIMAX_with_calendar_all_hex.py"  --city DD --part 2 --depvar demand

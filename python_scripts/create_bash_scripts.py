@@ -12,14 +12,14 @@ print(script_content)
 
 part_ls = [1, 2]
 city_ls = ["DD", "FB"]
-dep_var_ls = ["demand", "supply"]
+depvar_ls = ["demand", "supply"]
 
 for city in city_ls:
     for part in part_ls:
-        for dep_var in dep_var_ls:
-            added_part = f" --city {city} --part {part} --dep-var {dep_var}"
+        for depvar in depvar_ls:
+            added_part = f" --city {city} --part {part} --depvar {depvar}"
             adj_script = script_content + added_part
-            goal_file_path = os.path.join(goal_dir, f"sarimax_{city}_{part}_{dep_var}.sh")
+            goal_file_path = os.path.join(goal_dir, f"sarimax_{city}_{part}_{depvar}.sh")
 
             with open(goal_file_path, "w") as f:
                 f.write(adj_script)
