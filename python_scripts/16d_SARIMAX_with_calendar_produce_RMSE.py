@@ -23,7 +23,7 @@ import numpy as np
 import os
 import seaborn as sns
 
-EXPERIMENT_NAME = "sarima_calendar"
+EXPERIMENT_NAME = "sarimax_calendar"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-
-# import pmdarima.arima as pm_arima
 import gc
 import pandas as pd
 import time
@@ -15,28 +12,37 @@ from matplotlib import pyplot as plt
 import warnings
 import argparse
 
-
 # from sklearn.metrics import mean_squared_error
-import numpy as np
+# import numpy as np
 import os
 import seaborn as sns
+
+EXPERIMENT_NAME = "sarimax_calendar"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 parser = argparse.ArgumentParser()
 # add default value
 parser.add_argument("--dep_var", type=str, choices=["demand", "supply", "demand_supply"], default="demand_supply", help="Dependent variable to predict")
+parser.add_argument("--part", type=str, choices=["1_2", "1", "2"], default="1_2", help="Part")
+parser.add_argument("--city", type=str, choices=["DD_FB", "DD", "FB"], default="1_2", help="City")
 args = parser.parse_args()
-
 dep_var_ls = ["demand", "supply"] if args.dep_var == "demand_supply" else [args.dep_var]
-
+part_ls = [1, 2] if args.part == "1_2" else [int(args.part)]
+city_ls = ["DD", "FB"] if args.city == "DD_FB" else [args.city]
 
 mycell = "871f1b559ffffff"
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_dir = "logs/sarimax_calendar"
+log_dir = f"logs/{EXPERIMENT_NAME}"
 if not os.path.exists(log_dir):
     os.makedirs(log_dir)
+model_dir = f"models/{EXPERIMENT_NAME}"
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
+img_dir = f"tmp/images/{EXPERIMENT_NAME}"
+if not os.path.exists(img_dir):
+    os.makedirs(img_dir)
 
 log_fullpath = os.path.join(log_dir, f"sarimax_calendar_{start_time}.log")
 
@@ -148,16 +154,9 @@ dep_var_helper = {"demand": "rent_count", "supply": "return_count"}
 train_df_helper = {"DD": {1: train_validation_DD_1, 2: train_validation_DD_2}, "FB": {1: train_validation_FB_1, 2: train_validation_FB_2}}
 test_df_helper = {"DD": {1: test_DD_1, 2: test_DD_2}, "FB": {1: test_FB_1, 2: test_FB_2}}
 
-model_dir = "models/sarimax_calendar"
-if not os.path.exists(model_dir):
-    os.makedirs(model_dir)
-img_dir = "tmp/images/sarimax_calendar"
-if not os.path.exists(img_dir):
-    os.makedirs(img_dir)
-
-for city in ["DD", "FB"]:
+for city in city_ls:
     for current_cell in df_helper[city].hex_id.unique():
-        for part in [1, 2]:
+        for part in part_ls:
             for dep_var in dep_var_ls:
                 model_name = f"sarimax_calendar_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 model_path = os.path.join(model_dir, model_name)
@@ -241,13 +240,13 @@ for city in ["DD", "FB"]:
                 print(len(train_sr), len(train_exog_df), len(test_sr), len(test_exog_df))
 
                 model = SARIMAX(endog=train_sr, exog=train_exog_df, order=(1, 1, 1), seasonal_order=(1, 0, 1, 24), freq="h")
-                results = model.fit()
+                model_fit = model.fit()
                 # print model summary
 
-                logging.info(results.summary())
+                logging.info(model_fit.summary())
 
                 logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
-                predictions = results.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
+                predictions = model_fit.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
 
                 plt.figure(figsize=(8, 5))  # 10, 5 was too wide
                 sns.lineplot(data=test_sr, label="Test data")
@@ -265,7 +264,7 @@ for city in ["DD", "FB"]:
                 plt.close()
 
                 with open(model_path, "wb") as pkl:
-                    pickle.dump(model, pkl)
+                    pickle.dump(model_fit, pkl)
                 logging.info(f"Model saved as {model_name}")
-                del model, results, train_df, test_df, train_sr, test_sr, train_exog_df, test_exog_df
+                del model, model_fit, train_df, test_df, train_sr, test_sr, train_exog_df, test_exog_df
                 gc.collect()
