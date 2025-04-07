@@ -6,10 +6,10 @@ dep_var = "demand"
 city = "DD"
 part = 1
 
-EXPERIMENT_NAME = "sarimax_calendar"
+EXPERIMENT_NAME = "sarimax_calendar_weather"
 
 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{mycell}.pkl"
-model_dir = "models/sarimax_calendar"
+model_dir = f"models/{EXPERIMENT_NAME}"
 
 model_path = os.path.join(model_dir, model_name)
 with open(model_path, "rb") as f:
