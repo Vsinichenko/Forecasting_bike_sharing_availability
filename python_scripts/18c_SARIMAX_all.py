@@ -17,7 +17,7 @@ import argparse
 import os
 import seaborn as sns
 
-EXPERIMENT_NAME = "sarimax_all"
+EXPERIMENT_NAME = "sarimax_all_no_weekdays"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -146,12 +146,6 @@ exog_colnames = [
     "hour_21",
     "hour_22",
     "hour_23",
-    "weekday_Tue",
-    "weekday_Wed",
-    "weekday_Thu",
-    "weekday_Fri",
-    "weekday_Sat",
-    "weekday_Sun",
     "is_dayoff",
     "Temperature",
     "Humidity",
