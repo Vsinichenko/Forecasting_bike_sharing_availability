@@ -1,6 +1,6 @@
 import os
 
-EXPERIMENT_NAME = "sarimax_calendar_weather"
+EXPERIMENT_NAME = "sarimax_all"
 
 sample_dir = "bash_scripts/multiple_tasks"
 sample_path = os.path.join(sample_dir, "sample.sh")
