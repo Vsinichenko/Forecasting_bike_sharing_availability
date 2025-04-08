@@ -17,7 +17,7 @@ import argparse
 import os
 import seaborn as sns
 
-EXPERIMENT_NAME = "sarimax_calendar_weather_events"
+EXPERIMENT_NAME = "sarimax_all"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
