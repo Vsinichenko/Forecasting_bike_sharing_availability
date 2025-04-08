@@ -6,7 +6,7 @@ dep_var = "demand"
 city = "DD"
 part = 1
 
-EXPERIMENT_NAME = "sarimax_calendar_weather"
+EXPERIMENT_NAME = "sarimax_all"
 
 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{mycell}.pkl"
 model_dir = f"models/{EXPERIMENT_NAME}"

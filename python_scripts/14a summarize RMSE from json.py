@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-EXPERIMENT_NAME = "sarimax_calendar_weather"
+EXPERIMENT_NAME = "sarimax_all"
 
 PLOTS = False
 
