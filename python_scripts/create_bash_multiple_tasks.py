@@ -27,7 +27,7 @@ for city in city_ls:
             current_task_name = f"{EXPERIMENT_NAME}_{city}_{part}_{depvar}"
             adj_script = adj_script.replace("TASK_NAME", current_task_name)
 
-            goal_file_path = os.path.join(goal_dir, f"{EXPERIMENT_NAME}_{current_task_name}.sh")
+            goal_file_path = os.path.join(goal_dir, f"{current_task_name}.sh")
 
             with open(goal_file_path, "w") as f:
                 f.write(adj_script)
