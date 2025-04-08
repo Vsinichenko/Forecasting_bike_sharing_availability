@@ -13,7 +13,7 @@ import argparse
 import os
 import json
 
-EXPERIMENT_NAME = "sarimax_calendar_weather"
+EXPERIMENT_NAME = "sarimax_all"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -69,29 +69,11 @@ sys.stderr = LoggerWriter(logging.error)  # Capture warnings and errors
 
 logging.info("Reading data")
 
-filename_DD = f"data/nextbike/hourly_demand_supply_Dresden 2025-03-19_10-47-56.csv"
-filename_FB = f"data/nextbike/hourly_demand_supply_Freiburg_missing_interpolated_2025-03-19_10-47-56.csv"
+# bike trips
+filename_DD = f"data/df_DD_for_SARIMAX_2025-04-08_14-28-37.csv"
+filename_FB = f"data/df_FB_for_SARIMAX_2025-04-08_14-28-37.csv"
 df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
 df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
-df_DD = df_DD.sort_values("datetime_hour")
-df_FB = df_FB.sort_values("datetime_hour")
-
-filename_weather_DD = "data/weather/df_Dresden_weather_hourly 2025-03-28_20-51-37.csv"
-filename_weather_FB = "data/weather/df_Freiburg_weather_hourly 2025-03-28_20-51-37.csv"
-
-df_weather_DD = pd.read_csv(filename_weather_DD, index_col=None, parse_dates=["datetime_hour"])
-df_weather_FB = pd.read_csv(filename_weather_FB, index_col=None, parse_dates=["datetime_hour"])
-
-df_weather_DD = df_weather_DD.drop(columns=["Precipitation", "Wind"])
-df_weather_FB = df_weather_FB.drop(columns=["Precipitation", "Wind"])
-
-df_weather_DD["Temperature_times_Humidity"] = df_weather_DD["Temperature"] * df_weather_DD["Humidity"]
-df_weather_FB["Temperature_times_Humidity"] = df_weather_FB["Temperature"] * df_weather_FB["Humidity"]
-
-
-df_DD = df_DD.merge(df_weather_DD, on="datetime_hour", how="left")
-df_FB = df_FB.merge(df_weather_FB, on="datetime_hour", how="left")
-
 
 # test date ranges
 test_range_1_DD = pd.date_range(start="2024-03-21", end="2024-03-31")
@@ -105,32 +87,6 @@ test_range_1_FB = [date.date() for date in test_range_1_FB]
 
 test_range_2_FB = pd.date_range(start="2024-10-23", end="2024-10-31")
 test_range_2_FB = [date.date() for date in test_range_2_FB]
-
-## calendar effects
-for i, df_tmp in enumerate([df_DD, df_FB]):
-    df_tmp["weekday"] = df_tmp.datetime_hour.dt.dayofweek
-    df_tmp["weekday"] = df_tmp["weekday"].map({0: "Mon", 1: "Tue", 2: "Wed", 3: "Thu", 4: "Fri", 5: "Sat", 6: "Sun"})
-    weekday_df = pd.get_dummies(df_tmp["weekday"], prefix="weekday", drop_first=False, dtype=int)
-    weekday_df.index = df_tmp.index
-    weekday_df.drop(columns="weekday_Mon", inplace=True)
-    df_tmp[weekday_df.columns] = weekday_df
-
-    df_tmp["hour"] = df_tmp.datetime_hour.dt.hour
-    hours_df = pd.get_dummies(df_tmp["hour"], prefix="hour", drop_first=False, dtype=int)
-    hours_df.index = df_tmp.index
-    hours_df.drop(columns="hour_0", inplace=True)
-    df_tmp[hours_df.columns] = hours_df
-    df_tmp["is_dayoff"] = df_tmp["weekday_Sat"] + df_tmp["weekday_Sun"]
-    # list of german holidays in 2023 and 2024
-    if i == 0:
-        # holidays for Dresden
-        german_holidays = ["2024-01-01", "2024-03-29", "2024-04-01", "2024-05-01", "2024-05-09", "2024-05-20", "2024-10-03", "2024-10-31"]
-    else:
-        german_holidays = ["2023-06-08", "2024-10-03"]
-    german_holidays = [pd.to_datetime(date).date() for date in german_holidays]
-    flt = df_tmp.datetime_hour.dt.date.isin(german_holidays)
-    len(df_tmp[flt])
-    df_tmp.loc[flt, "is_dayoff"] = 1
 
 
 df_DD_1 = df_DD.loc[df_DD.datetime_hour.dt.date <= test_range_1_DD[-1]]  # first half of dates
@@ -198,12 +154,20 @@ exog_colnames = [
     "Temperature_times_Humidity",
 ]
 
+exog_colnames_demand = exog_colnames + ["event_count_end"]
+exog_colnames_supply = exog_colnames + ["event_count_start"]
+
 rmse_collector = {}
 
 for city in city_ls:
     for current_cell in df_helper[city].hex_id.unique():
         for part in part_ls:
             for dep_var in dep_var_ls:
+                if dep_var == "demand":
+                    exog_colnames = exog_colnames_demand
+                else:
+                    exog_colnames = exog_colnames_supply
+
                 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
                 logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
 
