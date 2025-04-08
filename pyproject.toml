@@ -28,6 +28,7 @@ h3 = "^4.2.2"
 pre-commit = "^4.2.0"
 nbstripout = "^0.8.1"
 statsmodels = "^0.14.4"
+openpyxl = "^3.1.5"
 
 
 [build-system]
