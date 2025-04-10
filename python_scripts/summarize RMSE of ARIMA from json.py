@@ -3,9 +3,9 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-EXPERIMENT_NAME = "sarimax_all"
+EXPERIMENT_NAME = "sarimax_all_no_weekdays"
 
-PLOTS = False
+PLOTS = True
 
 
 with open(f"rmse/{EXPERIMENT_NAME}.json", "r") as f:
