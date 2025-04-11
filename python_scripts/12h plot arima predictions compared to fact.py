@@ -1,15 +1,14 @@
 # %%
-import pmdarima as pm
+import pickle
 
 # import auto_arima # requires numpy version 1.26.4 i.e. before 2.
 import time
-import pickle
-from matplotlib import pyplot as plt
+
 import pandas as pd
+import pmdarima as pm
 import seaborn as sns
-
+from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
-
 
 # %%
 datetime = "2025-03-19_10-47-56"

@@ -1,11 +1,12 @@
+import json
+import logging
 import os
 import pickle
+import warnings
+from math import sqrt
+
 import pandas as pd
 from sklearn.metrics import mean_squared_error
-from math import sqrt
-import logging
-import warnings
-import json
 
 logging.basicConfig(level=logging.INFO)
 warnings.simplefilter(action="ignore", category=FutureWarning)

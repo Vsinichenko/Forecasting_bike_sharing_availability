@@ -1,11 +1,12 @@
-import pandas as pd
-from sklearn.metrics import mean_squared_error
-from math import sqrt
 import json
 import logging
 import warnings
+from math import sqrt
+
+import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
+from sklearn.metrics import mean_squared_error
 
 logging.basicConfig(level=logging.INFO)
 warnings.simplefilter(action="ignore", category=FutureWarning)

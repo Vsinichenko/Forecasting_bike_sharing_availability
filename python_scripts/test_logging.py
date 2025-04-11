@@ -2,7 +2,6 @@ import logging
 import sys
 from datetime import datetime
 
-
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_fullpath = f"../example_logging_output_{start_time}.log"
 

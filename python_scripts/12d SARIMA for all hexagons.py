@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from pmdarima import auto_arima
-import pmdarima as pm
-import pandas as pd
-import time
-import pickle
 import logging
-import sys
-from datetime import datetime
-from matplotlib import pyplot as plt
-import warnings
 import os
+import pickle
+import sys
+import time
+import warnings
+from datetime import datetime
+
+import pandas as pd
+import pmdarima as pm
+from matplotlib import pyplot as plt
+from pmdarima import auto_arima
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 

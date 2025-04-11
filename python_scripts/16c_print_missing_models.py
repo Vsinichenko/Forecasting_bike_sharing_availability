@@ -2,19 +2,14 @@
 # coding: utf-8
 
 
-# import pmdarima.arima as pm_arima
-import pandas as pd
-
-
 import logging
+import os
 import sys
+import warnings
 from datetime import datetime
 
-import warnings
-
-
-import os
-
+# import pmdarima.arima as pm_arima
+import pandas as pd
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 

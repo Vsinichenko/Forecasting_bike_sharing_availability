@@ -1,10 +1,11 @@
-from pmdarima import auto_arima
-import pandas as pd
-import time
-import pickle
 import logging
+import pickle
 import sys
+import time
 from datetime import datetime
+
+import pandas as pd
+from pmdarima import auto_arima
 
 start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_fullpath = f"../output_{start_time}.log"

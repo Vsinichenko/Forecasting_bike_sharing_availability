@@ -1,20 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from statsmodels.tsa.statespace.sarimax import SARIMAX
+import logging
+import os
+import pickle
+import sys
+import time
+import warnings
+from datetime import datetime
+
+import numpy as np
 
 # import pmdarima.arima as pm_arima
 import pandas as pd
-import time
-import pickle
-import logging
-import sys
-from datetime import datetime
 from matplotlib import pyplot as plt
-import warnings
 from sklearn.metrics import mean_squared_error
-import numpy as np
-import os
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
