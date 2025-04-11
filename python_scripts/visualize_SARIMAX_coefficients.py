@@ -17,6 +17,7 @@ import seaborn as sns
 
 
 EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
+PRINT_COEFS = False
 PLOT = True
 
 
@@ -34,6 +35,10 @@ for model_name in model_names:
 
 df_params = pd.DataFrame(params)
 
+for h in range(1, 10):  # for correct sortings
+    print(h)
+    df_params["Coefficient"] = df_params["Coefficient"].str.replace(f"\bhour_{h}\b", f"hour_0{h}", regex=True)
+
 
 df_params["City"] = ""
 df_params.loc[df_params.Model.str.contains("FB"), "City"] = "Freiburg"
@@ -42,8 +47,9 @@ df_params.loc[df_params.Model.str.contains("DD"), "City"] = "Dresden"
 
 df_params = df_params.sort_values(by=["City", "Coefficient", "p_value"])
 
-with pd.option_context("display.max_rows", None, "display.max_columns", None, "display.width", None, "display.float_format", "{:.10f}".format):
-    print(df_params)
+if PRINT_COEFS:
+    with pd.option_context("display.max_rows", None, "display.max_columns", None, "display.width", None, "display.float_format", "{:.10f}".format):
+        print(df_params)
 
 
 df_params.Coefficient.unique()
