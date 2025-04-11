@@ -1,5 +1,6 @@
-from sklearn.metrics import mean_squared_error
-from math import sqrt
+#!/usr/bin/env python
+# coding: utf-8
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 import gc
 import pandas as pd
 import time
@@ -10,10 +11,13 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 import warnings
 import argparse
-import os
-import json
 
-EXPERIMENT_NAME = "sarimax_all_no_weekdays"
+# from sklearn.metrics import mean_squared_error
+# import numpy as np
+import os
+import seaborn as sns
+
+EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -118,7 +122,8 @@ dep_var_helper = {"demand": "rent_count", "supply": "return_count"}
 train_df_helper = {"DD": {1: train_validation_DD_1, 2: train_validation_DD_2}, "FB": {1: train_validation_FB_1, 2: train_validation_FB_2}}
 test_df_helper = {"DD": {1: test_DD_1, 2: test_DD_2}, "FB": {1: test_FB_1, 2: test_FB_2}}
 
-exog_colnames = [
+
+exog_colnames_base = [
     "hour_1",
     "hour_2",
     "hour_3",
@@ -143,15 +148,16 @@ exog_colnames = [
     "hour_22",
     "hour_23",
     "is_dayoff",
-    "Temperature",
     "Humidity",
-    "Temperature_times_Humidity",
 ]
 
-exog_colnames_demand = exog_colnames + ["event_count_end"]
-exog_colnames_supply = exog_colnames + ["event_count_start"]
 
-rmse_collector = {}
+if EXPERIMENT_NAME == "sarimax_all_no_weekdays":
+    exog_colnames_base.append("Temperature", "Temperature_times_Humidity")
+
+
+exog_colnames_demand = exog_colnames_base + ["event_count_end"]
+exog_colnames_supply = exog_colnames_base + ["event_count_start"]
 
 for city in city_ls:
     for current_cell in df_helper[city].hex_id.unique():
@@ -163,16 +169,12 @@ for city in city_ls:
                     exog_colnames = exog_colnames_supply
 
                 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
-                logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
-
                 model_path = os.path.join(model_dir, model_name)
-                if not os.path.exists(model_path):
-                    logging.error(f"Model {model_name} does not exist")
+                if os.path.exists(model_path):
+                    logging.info(f"Model {model_name} already exists. Skipping...")
                     continue
 
-                with open(model_path, "rb") as f:
-                    model_fit = pickle.load(f)
-
+                logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
                 dep_colname = dep_var_helper[dep_var]
                 train_df = train_df_helper[city][part]
                 train_df = train_df.loc[train_df.hex_id == current_cell].set_index("datetime_hour")
@@ -182,21 +184,45 @@ for city in city_ls:
 
                 train_sr = train_df[dep_colname]
 
-                test_exog_df = train_df[exog_colnames]
+                train_exog_df = train_df[exog_colnames]
 
                 test_sr = test_df[dep_colname]
                 test_exog_df = test_df[exog_colnames]
 
-                # print model summary
+                train_sr = train_sr.asfreq("h")
+
+                start_train_time = time.time()
+                # print(len(train_sr), len(train_exog_df), len(test_sr), len(test_exog_df))
+
+                # train_sr.to_csv("train_sr.csv")
+                # train_exog_df.to_csv("train_exog_df.csv")
+
+                model = SARIMAX(endog=train_sr, exog=train_exog_df, order=(1, 1, 1), seasonal_order=(1, 0, 1, 24), freq="h")
+                model_fit = model.fit()
+
+                logging.info(model_fit.summary())
+
+                logging.info(f"Elapsed time: {(time.time() - start_train_time)/60} minutes")
                 predictions = model_fit.get_forecast(steps=len(test_sr), exog=test_exog_df).predicted_mean
                 predictions[predictions < 0] = 0
 
-                rmse = sqrt(mean_squared_error(test_sr, predictions))
-                rmse_collector[model_name] = rmse
+                plt.figure(figsize=(8, 5))  # 10, 5 was too wide
+                sns.lineplot(data=test_sr, label="Test data")
+                sns.lineplot(data=predictions, label="Predictions", linestyle="--")
+                plt.xlabel("Datetime hour")
+                plt.ylabel(dep_var_helper[dep_var].replace("_", " ").capitalize())
+                plt.xticks(rotation=90)
+                plt.legend()
+                plt.tight_layout()
 
+                img_filename = model_name.replace(".pkl", ".png")
+                img_path = os.path.join(img_dir, img_filename)
 
-for key, value in rmse_collector.items():
-    logging.info(f"{key}: {value}")
+                plt.savefig(img_path)
+                plt.close()
 
-with open(f"rmse/{EXPERIMENT_NAME}.json", "w") as f:
-    json.dump(rmse_collector, f, indent=4)
+                with open(model_path, "wb") as pkl:
+                    pickle.dump(model_fit, pkl)
+                logging.info(f"Model saved as {model_name}")
+                del model, model_fit, train_df, test_df, train_sr, test_sr, train_exog_df, test_exog_df
+                gc.collect()
