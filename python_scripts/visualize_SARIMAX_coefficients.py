@@ -16,7 +16,7 @@ from glob import glob
 import seaborn as sns
 
 
-EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
+EXPERIMENT_NAME = "sarimax_all"
 PRINT_COEFS = False
 PLOT = True
 
@@ -36,8 +36,7 @@ for model_name in model_names:
 df_params = pd.DataFrame(params)
 
 for h in range(1, 10):  # for correct sortings
-    print(h)
-    df_params["Coefficient"] = df_params["Coefficient"].str.replace(f"\bhour_{h}\b", f"hour_0{h}", regex=True)
+    df_params["Coefficient"] = df_params["Coefficient"].str.replace(rf"\bhour_{h}\b", f"hour_0{h}", regex=True)
 
 
 df_params["City"] = ""
