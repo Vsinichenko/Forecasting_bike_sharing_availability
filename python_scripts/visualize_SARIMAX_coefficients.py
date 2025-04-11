@@ -42,7 +42,8 @@ df_params.loc[df_params.Model.str.contains("DD"), "City"] = "Dresden"
 
 df_params = df_params.sort_values(by=["City", "Coefficient", "p_value"])
 
-print(df_params)
+with pd.option_context("display.max_rows", None, "display.max_columns", None, "display.width", None, "display.float_format", "{:.10f}".format):
+    print(df_params)
 
 
 df_params.Coefficient.unique()
