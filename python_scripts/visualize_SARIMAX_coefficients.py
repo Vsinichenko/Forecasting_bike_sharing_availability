@@ -16,7 +16,7 @@ from glob import glob
 import seaborn as sns
 
 
-EXPERIMENT_NAME = "sarimax_all_no_weekdays"
+EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
 PLOT = True
 
 
