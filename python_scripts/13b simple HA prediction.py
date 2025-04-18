@@ -73,7 +73,7 @@ rmse_collector = {}
 for city in ["DD", "FB"]:
     for current_cell in df_helper[city].hex_id.unique():
         for part in [1, 2]:
-            for dep_var in ["demand", "supply"]:
+            for dep_var in ["demand"]:
                 model_name = f"{city}_{dep_var}_part_{part}_cell_{current_cell}"
                 dep_colname = dep_var_helper[dep_var]
 
@@ -101,21 +101,21 @@ for city in ["DD", "FB"]:
                 rmse_collector[model_name] = rmse
 
                 if city == "DD" and part == 1 and current_cell == mycell:
-                    plt.figure(figsize=(10, 5))
+                    plt.figure(figsize=(8, 5))
+                    plt.figure(figsize=(8, 5))  # 10, f5 was too wide
                     sns.lineplot(data=test, label="Test data")
                     sns.lineplot(data=predictions, label="Predictions", linestyle="--")
                     plt.xlabel("Datetime hour")
-                    plt.ylabel("Rent count")
-                    # plt.title(f"Rents and returns by minute on {day_str}")
+                    plt.ylabel(dep_var_helper[dep_var].replace("_", " ").capitalize())
                     plt.xticks(rotation=90)
                     plt.legend()
-                    # plt.show()
-                    plt.savefig(f"tmp/sample_{EXPERIMENT_NAME}_prediction.png", bbox_inches="tight")
+                    plt.tight_layout()
+                    plt.savefig(f"tmp/sample_{EXPERIMENT_NAME}.png", bbox_inches="tight")
 
 
-for key, value in rmse_collector.items():
-    logging.info(f"{key}: {value}")
+# for key, value in rmse_collector.items():
+#     logging.info(f"{key}: {value}")
 
 
-with open(f"data/rmse/{EXPERIMENT_NAME}.json", "w") as f:
-    json.dump(rmse_collector, f, indent=4)
+# with open(f"rmse/{EXPERIMENT_NAME}.json", "w") as f:
+#     json.dump(rmse_collector, f, indent=4)
