@@ -1,20 +1,19 @@
 import os
 import pickle
 
-mycells = ["871f1b559ffffff", "871f1b54bffffff", "871f81534ffffff"]
-dep_var = "demand"
-city = "DD"
+mycells = ["871f1b559ffffff"]
 part = 1
 
-TO_LATEX = False
+TO_LATEX = True
 
-EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
+EXPERIMENT_NAME = "sarimax_all"
 
 for mycell in mycells:
     for dep_var in ["demand", "supply"]:
-        for city in ["DD", "FB"]:
+        for city in ["DD"]:
             try:
                 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{mycell}.pkl"
+                print(model_name)
                 model_dir = f"models/{EXPERIMENT_NAME}"
 
                 model_path = os.path.join(model_dir, model_name)
@@ -29,5 +28,5 @@ for mycell in mycells:
             if TO_LATEX:
                 latex_summary = model_fit.summary().as_latex()
 
-                with open(f"tmp/sample_model_summary_{EXPERIMENT_NAME}.tex", "w") as f:
+                with open(f"tmp/{model_name}.tex", "w") as f:
                     f.write(latex_summary)
