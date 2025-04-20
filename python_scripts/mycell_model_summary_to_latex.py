@@ -1,23 +1,33 @@
 import os
 import pickle
 
-mycell = "871f1b559ffffff"
+mycells = ["871f1b559ffffff", "871f1b54bffffff", "871f81534ffffff"]
 dep_var = "demand"
 city = "DD"
 part = 1
 
-EXPERIMENT_NAME = "sarimax_all"
+TO_LATEX = False
 
-model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{mycell}.pkl"
-model_dir = f"models/{EXPERIMENT_NAME}"
+EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
 
-model_path = os.path.join(model_dir, model_name)
-with open(model_path, "rb") as f:
-    model_fit = pickle.load(f)
+for mycell in mycells:
+    for dep_var in ["demand", "supply"]:
+        for city in ["DD", "FB"]:
+            try:
+                model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{mycell}.pkl"
+                model_dir = f"models/{EXPERIMENT_NAME}"
 
-print(model_fit.summary())
+                model_path = os.path.join(model_dir, model_name)
+                with open(model_path, "rb") as f:
+                    model_fit = pickle.load(f)
 
-latex_summary = model_fit.summary().as_latex()
+                print(model_fit.summary())
+            except FileNotFoundError:
+                print(f"Model file not found: {model_path}")
+                continue
 
-with open(f"tmp/sample_model_summary_{EXPERIMENT_NAME}.tex", "w") as f:
-    f.write(latex_summary)
+            if TO_LATEX:
+                latex_summary = model_fit.summary().as_latex()
+
+                with open(f"tmp/sample_model_summary_{EXPERIMENT_NAME}.tex", "w") as f:
+                    f.write(latex_summary)
