@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "location-k-means-clustering"
+version = "0.1.0"
+description = "Clustering of locations using spopt package, which required python 3.10"
+authors = ["Valentyna Sinichenko"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.2.3"
+spopt = "^0.6.1"
+h3 = "^4.2.2"
+notebook = "^7.4.0"
+geopandas = "^1.0.1"
+shapely = "^2.1.0"
+contextily = "^1.6.2"
+matplotlib = "^3.10.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
