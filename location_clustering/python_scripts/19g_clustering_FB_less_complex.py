@@ -1,9 +1,10 @@
 import os
 import pickle
 
-import geopandas as gpd
+# import geopandas as gpd
 import h3
-import matplotlib.pyplot as plt
+
+# import matplotlib.pyplot as plt
 import pandas as pd
 from libpysal.weights import W
 from spopt.region import RegionKMeansHeuristic
