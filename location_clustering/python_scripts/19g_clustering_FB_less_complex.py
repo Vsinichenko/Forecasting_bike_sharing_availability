@@ -1,7 +1,6 @@
 import os
 import pickle
 
-# import contextily as ctx
 import geopandas as gpd
 import h3
 import matplotlib.pyplot as plt
@@ -13,6 +12,8 @@ filename_DD = "data/nextbike/trips_DD_with_small_hexids_res8_2025-04-21_17-15-43
 filename_FB = "data/nextbike/trips_FB_with_small_hexids_res8_2025-04-21_17-15-43.csv"
 df_DD = pd.read_csv(filename_DD, index_col=0)
 df_FB = pd.read_csv(filename_FB, index_col=0)
+
+START_NEIGHBOURS_DISTANCE = 1
 
 
 def transform_df(df_input):
@@ -43,14 +44,8 @@ def scale_df(df_grouped):
     return df_grouped_scaled_tmp
 
 
-# df_DD_grouped = transform_df(df_DD)
-# df_DD_grouped_scaled = scale_df(df_DD_grouped)
-
 df_FB_grouped = transform_df(df_FB)
 df_FB_grouped_scaled = scale_df(df_FB_grouped)
-
-# my_neighbour = "8a1f8024429ffff"
-# assert my_neighbour not in df_FB_grouped_scaled.index
 
 
 def add_missing_hex_ids(df_grouped_scaled_input, df_input):
@@ -70,27 +65,9 @@ def add_missing_hex_ids(df_grouped_scaled_input, df_input):
     return df_tmp
 
 
-# df_DD_grouped_scaled = add_missing_hex_ids(df_DD_grouped_scaled, df_DD)
-
-
 df_FB_grouped_scaled = add_missing_hex_ids(df_FB_grouped_scaled, df_FB)
-
-# print(df_FB_grouped_scaled.loc[my_neighbour])
-
-
-# plot_cell_area(df_FB_grouped_scaled.index.tolist(), save=True, img_name="FB_cells")
-# plot_cell_area(df_DD_grouped_scaled.index.tolist(), save=True, img_name = "DD_cells")
-
-
 existing_hex_ids = set(df_FB_grouped_scaled.index)
-
-
-START_NEIGHBOURS_DISTANCE = 1
-
-
 existing_hex_ids = set(df_FB_grouped_scaled.index)
-
-
 neighbors_dict = {hex_id: [cell for cell in h3.grid_ring(hex_id, START_NEIGHBOURS_DISTANCE) if cell in existing_hex_ids] for hex_id in existing_hex_ids}
 
 
@@ -118,20 +95,16 @@ while True:
 
 
 w = W(neighbors_dict)
-
-
 w = w.symmetrize()
-
-
 print(f"{w.n_components=}")
 
-
-len(neighbors_dict)
-
+print(f"{len(df_FB_grouped_scaled)=}")
 
 model = RegionKMeansHeuristic(data=df_FB_grouped_scaled, n_clusters=25, w=w, drop_islands=True)
 
+print("Start clustering")
 model.solve()
+print("Finish clustering")
 
 model_dir = "models/clustering/"
 if not os.path.exists(model_dir):

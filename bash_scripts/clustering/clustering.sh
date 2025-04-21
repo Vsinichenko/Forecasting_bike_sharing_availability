@@ -12,4 +12,4 @@ source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda FBS_cluster
 
-python "location_clustering/python_scripts/19g_clustering_less_complex.py" 
+python "location_clustering/python_scripts/19g_clustering_FB_less_complex.py" 
