@@ -10,6 +10,6 @@
 
 source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
-conda activate FBS_cluster
+conda activate /dev/shm/conda_envs_vasi018e/FBS_cluster
 
 python "location_clustering/python_scripts/19d_clustering.py" 
