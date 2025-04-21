@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --ntasks=1                  
-#SBATCH --cpus-per-task=100                
+#SBATCH --cpus-per-task=10                
 #SBATCH --mem=10G
 #SBATCH --time=10:00:00              
 #SBATCH --job-name=clustering_FB_less_complex
