@@ -4,12 +4,12 @@
 #SBATCH --cpus-per-task=200                
 #SBATCH --mem=200G
 #SBATCH --time=10:00:00              
-#SBATCH --job-name=clustering_FB
-#SBATCH --output=logs/clustering_FB-%j.out    
-#SBATCH --error=logs/clustering_FB-%j.err     
+#SBATCH --job-name=clustering_FB_less_complex
+#SBATCH --output=logs/clustering_FB_less_complex-%j.out    
+#SBATCH --error=logs/clustering_FB_less_complex-%j.err     
 
 source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda FBS_cluster
 
-python "location_clustering/python_scripts/19d_clustering.py" 
+python "location_clustering/python_scripts/19g_clustering_less_complex.py" 
