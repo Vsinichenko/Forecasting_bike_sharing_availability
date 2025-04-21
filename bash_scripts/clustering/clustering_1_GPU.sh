@@ -1,13 +1,14 @@
 #!/bin/bash
 
+#SBATCH --nodes=1
 #SBATCH --ntasks=1                  
 #SBATCH --cpus-per-task=1     
 #SBATCH --gres=gpu:1           
 #SBATCH --mem=100G
 #SBATCH --time=10:00:00              
-#SBATCH --job-name=clustering_FB_less_complex
-#SBATCH --output=logs/clustering_FB_less_complex-%j.out    
-#SBATCH --error=logs/clustering_FB_less_complex-%j.err     
+#SBATCH --job-name=clustering_FB_less_complex_GPU
+#SBATCH --output=logs/clustering_FB_less_complex_GPU-%j.out    
+#SBATCH --error=logs/clustering_FB_less_complex_GPU-%j.err     
 
 source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
