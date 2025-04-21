@@ -12,4 +12,4 @@ source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda activate FBS_cluster
 
-python "location_clustering/python_scripts/17a_SARIMAX_calendar_weather.py"  --city DD --part 1 --depvar demand
+python "location_clustering/python_scripts/19d_clustering.py" 
