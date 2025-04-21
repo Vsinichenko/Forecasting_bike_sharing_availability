@@ -1,7 +1,7 @@
 import os
 import pickle
 
-import contextily as ctx
+# import contextily as ctx
 import geopandas as gpd
 import h3
 import matplotlib.pyplot as plt
@@ -9,59 +9,58 @@ import pandas as pd
 from libpysal.weights import W
 from spopt.region import RegionKMeansHeuristic
 
+# def plot_df(df, column=None, ax=None, add_basemap=True):
+#     "Plot based on the `geometry` column of a GeoPandas dataframe"
+#     df = df.copy()
+#     df = df.to_crs(epsg=3857)  # web mercator
 
-def plot_df(df, column=None, ax=None, add_basemap=True):
-    "Plot based on the `geometry` column of a GeoPandas dataframe"
-    df = df.copy()
-    df = df.to_crs(epsg=3857)  # web mercator
+#     if ax is None:
+#         _, ax = plt.subplots(figsize=(8, 8))
+#     ax.get_xaxis().set_visible(False)
+#     ax.get_yaxis().set_visible(False)
 
-    if ax is None:
-        _, ax = plt.subplots(figsize=(8, 8))
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-
-    df.plot(
-        ax=ax,
-        alpha=0.25,
-        edgecolor="k",
-        column=column,
-        categorical=True,
-        legend=True,
-        legend_kwds={"loc": "upper left"},
-    )
-    if add_basemap:
-        ctx.add_basemap(ax, crs=df.crs, source=ctx.providers.CartoDB.Positron)
-
-
-def plot_shape(shape, ax=None, add_basemap=True):
-    df = gpd.GeoDataFrame({"geometry": [shape]}, crs="EPSG:4326")
-    plot_df(df, ax=ax, add_basemap=add_basemap)
+#     df.plot(
+#         ax=ax,
+#         alpha=0.25,
+#         edgecolor="k",
+#         column=column,
+#         categorical=True,
+#         legend=True,
+#         legend_kwds={"loc": "upper left"},
+#     )
+#     if add_basemap:
+#         ctx.add_basemap(ax, crs=df.crs, source=ctx.providers.CartoDB.Positron)
 
 
-def plot_cell(cell, ax=None):
-    shape = h3.cells_to_h3shape([cell])
-    plot_shape(shape, ax=ax)
+# def plot_shape(shape, ax=None, add_basemap=True):
+#     df = gpd.GeoDataFrame({"geometry": [shape]}, crs="EPSG:4326")
+#     plot_df(df, ax=ax, add_basemap=add_basemap)
 
 
-def plot_cells(cells, ax=None):
-    fig, ax = plt.subplots(figsize=(8, 8))
-    shape = h3.cells_to_h3shape(cells)
-    plot_shape(shape, ax=ax, add_basemap=True)
-
-    for single_cell in cells:
-        single_shape = h3.cells_to_h3shape([single_cell])
-        # gdf = gpd.GeoDataFrame({'geometry': [single_shape]}, crs='EPSG:4326')
-        # gdf = gdf.to_crs(epsg=3857)
-        # gdf.plot(ax=ax, alpha=0.5, edgecolor='k')
-        plot_shape(single_shape, ax=ax, add_basemap=False)
+# def plot_cell(cell, ax=None):
+#     shape = h3.cells_to_h3shape([cell])
+#     plot_shape(shape, ax=ax)
 
 
-def plot_cell_area(cells, save=False, img_name="tmp"):
-    fig, ax = plt.subplots(figsize=(8, 8))
-    shape = h3.cells_to_h3shape(cells)
-    plot_shape(shape, ax=ax, add_basemap=True)
-    if save:
-        plt.savefig(f"tmp/images/{img_name}.png", dpi=300, bbox_inches="tight")
+# def plot_cells(cells, ax=None):
+#     fig, ax = plt.subplots(figsize=(8, 8))
+#     shape = h3.cells_to_h3shape(cells)
+#     plot_shape(shape, ax=ax, add_basemap=True)
+
+#     for single_cell in cells:
+#         single_shape = h3.cells_to_h3shape([single_cell])
+#         # gdf = gpd.GeoDataFrame({'geometry': [single_shape]}, crs='EPSG:4326')
+#         # gdf = gdf.to_crs(epsg=3857)
+#         # gdf.plot(ax=ax, alpha=0.5, edgecolor='k')
+#         plot_shape(single_shape, ax=ax, add_basemap=False)
+
+
+# def plot_cell_area(cells, save=False, img_name="tmp"):
+#     fig, ax = plt.subplots(figsize=(8, 8))
+#     shape = h3.cells_to_h3shape(cells)
+#     plot_shape(shape, ax=ax, add_basemap=True)
+#     if save:
+#         plt.savefig(f"tmp/images/{img_name}.png", dpi=300, bbox_inches="tight")
 
 
 filename_DD = "data/nextbike/trips_DD_with_small_hexids_res10_2025-04-21_11-55-31.csv"
