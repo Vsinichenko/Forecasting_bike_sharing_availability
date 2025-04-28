@@ -17,7 +17,7 @@ from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
 EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
-PRINT_COEFS = False
+PRINT_COEFS = True
 PLOT = True
 
 
