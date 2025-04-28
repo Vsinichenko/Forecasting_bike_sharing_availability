@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
+EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
 
 PLOTS = True
 

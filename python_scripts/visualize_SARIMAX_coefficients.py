@@ -16,7 +16,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
-EXPERIMENT_NAME = "sarimax_all_no_weekdays_only_humidity"
+EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
 PRINT_COEFS = False
 PLOT = True
 
