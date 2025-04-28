@@ -1,20 +1,9 @@
-import argparse
-import gc
-import json
-import logging
-import os
 import pickle
-import sys
-import time
-import warnings
-from datetime import datetime
 from glob import glob
-from math import sqrt
 
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
-from sklearn.metrics import mean_squared_error
 
 EXPERIMENT_NAME = "sarimax_all_optimized_adj_events_2"
 PRINT_COEFS = True
@@ -36,10 +25,10 @@ model_names = glob(f"models/{EXPERIMENT_NAME}/*")
 
 params = []
 for model_name in model_names:
-    for hex_id in small_hex_ids:
-        if hex_id in model_name:
-            print(f"skip model {model_name}")
-            continue
+    # for hex_id in small_hex_ids:
+    #     if hex_id in model_name:
+    #         print(f"skip model {model_name}")
+    #         continue
 
     with open(model_name, "rb") as f:
         model_fit = pickle.load(f)
@@ -61,6 +50,8 @@ df_params.loc[df_params.Model.str.contains("DD"), "City"] = "Dresden"
 
 
 df_params = df_params.sort_values(by=["City", "Coefficient", "p_value"])
+
+df_params = df_params.query("p_value<=0.05")
 
 if PRINT_COEFS:
     with pd.option_context("display.max_rows", None, "display.max_columns", None, "display.width", None, "display.float_format", "{:.10f}".format):
