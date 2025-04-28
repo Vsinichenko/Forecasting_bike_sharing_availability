@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
+EXPERIMENT_NAME = "sarimax_all_optimized_adj_events_2"
 
 PLOTS = True
 
