@@ -18,7 +18,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
+EXPERIMENT_NAME = "sarimax_all_optimized_adj_events_2"
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 

@@ -14,7 +14,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
-EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
+EXPERIMENT_NAME = "sarimax_all_optimized_adj_events_2"
 
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
@@ -72,8 +72,8 @@ sys.stderr = LoggerWriter(logging.error)  # Capture warnings and errors
 logging.info("Reading data")
 
 # bike trips
-filename_DD = f"data/df_DD_for_SARIMAX_2025-04-08_14-28-37.csv"
-filename_FB = f"data/df_FB_for_SARIMAX_2025-04-08_14-28-37.csv"
+filename_DD = f"data/df_DD_for_SARIMAX_with_adj_events_2_2025-04-28_15-47-45.csv"
+filename_FB = f"data/df_FB_for_SARIMAX_with_adj_events_2_2025-04-28_15-47-45.csv"
 df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
 df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
 

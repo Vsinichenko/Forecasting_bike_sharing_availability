@@ -16,7 +16,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
-EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
+EXPERIMENT_NAME = "sarimax_all_optimized_adj_events_2"
 PRINT_COEFS = True
 PLOT = True
 
@@ -38,6 +38,7 @@ params = []
 for model_name in model_names:
     for hex_id in small_hex_ids:
         if hex_id in model_name:
+            print(f"skip model {model_name}")
             continue
 
     with open(model_name, "rb") as f:
