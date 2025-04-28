@@ -21,10 +21,25 @@ PRINT_COEFS = False
 PLOT = True
 
 
+# obtain small hex ids
+filename_DD = f"../data/df_DD_for_SARIMAX_2025-04-08_14-28-37.csv"
+filename_FB = f"../data/df_FB_for_SARIMAX_2025-04-08_14-28-37.csv"
+df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
+df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
+df_bike = pd.concat([df_DD, df_FB], axis=0, ignore_index=True)
+hex_id_grouping = df_bike.groupby("hex_id")["rent_count"].sum()
+small_hex_id_grouping = hex_id_grouping[hex_id_grouping < 5000]
+small_hex_ids = small_hex_id_grouping.index.tolist()
+
+
 model_names = glob(f"models/{EXPERIMENT_NAME}/*")
 
 params = []
 for model_name in model_names:
+    for hex_id in small_hex_ids:
+        if hex_id in model_name:
+            continue
+
     with open(model_name, "rb") as f:
         model_fit = pickle.load(f)
     for coef_name in model_fit.params.index:
