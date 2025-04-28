@@ -22,8 +22,8 @@ PLOT = True
 
 
 # obtain small hex ids
-filename_DD = f"../data/df_DD_for_SARIMAX_2025-04-08_14-28-37.csv"
-filename_FB = f"../data/df_FB_for_SARIMAX_2025-04-08_14-28-37.csv"
+filename_DD = f"data/df_DD_for_SARIMAX_2025-04-08_14-28-37.csv"
+filename_FB = f"data/df_FB_for_SARIMAX_2025-04-08_14-28-37.csv"
 df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
 df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
 df_bike = pd.concat([df_DD, df_FB], axis=0, ignore_index=True)
