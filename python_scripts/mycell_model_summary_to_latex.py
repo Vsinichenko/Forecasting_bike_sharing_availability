@@ -6,7 +6,7 @@ part = 1
 
 TO_LATEX = True
 
-EXPERIMENT_NAME = "sarimax_all"
+EXPERIMENT_NAME = "sarimax_all_optimized_adj_events"
 
 for mycell in mycells:
     for dep_var in ["demand", "supply"]:
