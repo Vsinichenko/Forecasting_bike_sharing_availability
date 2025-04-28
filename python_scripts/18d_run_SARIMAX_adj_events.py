@@ -75,8 +75,8 @@ sys.stderr = LoggerWriter(logging.error)  # Capture warnings and errors
 logging.info("Reading data")
 
 # combined dataset
-filename_DD = f"data/df_DD_for_SARIMAX_with_adj_events_2025-04-28_14-38-58.csv"
-filename_FB = f"data/df_FB_for_SARIMAX_with_adj_events_2025-04-28_14-38-58.csv"
+filename_DD = f"data/df_DD_for_SARIMAX_with_adj_events_2_2025-04-28_15-47-45.csv"
+filename_FB = f"data/df_FB_for_SARIMAX_with_adj_events_2_2025-04-28_15-47-45.csv"
 df_DD = pd.read_csv(filename_DD, index_col=None, parse_dates=["datetime_hour"])
 df_FB = pd.read_csv(filename_FB, index_col=None, parse_dates=["datetime_hour"])
 
