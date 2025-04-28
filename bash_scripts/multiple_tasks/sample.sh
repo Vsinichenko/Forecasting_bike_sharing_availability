@@ -12,4 +12,4 @@ source /home/vasi018e/miniconda3/etc/profile.d/conda.sh
 
 conda activate FBSfor_arima
 
-python "python_scripts/18c_run_SARIMAX.py" 
+python "python_scripts/18d_run_SARIMAX_adj_events.py" 
