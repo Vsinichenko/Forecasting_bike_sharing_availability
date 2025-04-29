@@ -148,16 +148,17 @@ event_colnames_helper = {"demand": "event_count_end", "supply": "event_count_sta
 
 collector = {}
 
-for city in city_ls:
-    for current_cell in df_helper[city].hex_id.unique():
+for city in ["FB"]:
+    for current_cell in ["871f81535ffffff"]:
         for part in part_ls:
-            for dep_var in dep_var_ls:
+            for dep_var in ["demand"]:
                 if dep_var == "demand":
                     exog_colnames = exog_colnames_demand
                 else:
                     exog_colnames = exog_colnames_supply
 
                 model_name = f"{EXPERIMENT_NAME}_{city}_{dep_var}_part_{part}_cell_{current_cell}.pkl"
+                collector[model_name] = {}
                 logging.info(f"CITY {city} CURRENT CELL {current_cell}, PART {part}, DEPVAR {dep_var}")
 
                 model_path = os.path.join(model_dir, model_name)
@@ -200,3 +201,4 @@ for city in city_ls:
 
 with open("tmp/predictions_with_no_events_collector.pkl", "wb") as f:
     pickle.dump(collector, f)
+    logging.info("wrote collector")
