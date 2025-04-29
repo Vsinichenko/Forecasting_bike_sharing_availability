@@ -1,17 +1,14 @@
 import argparse
-import gc
 import json
 import logging
 import os
 import pickle
 import sys
-import time
 import warnings
 from datetime import datetime
 from math import sqrt
 
 import pandas as pd
-from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
 EXPERIMENT_NAME = "sarimax_all_optimized_adj_events_2"

@@ -11,7 +11,6 @@ import warnings
 from datetime import datetime
 
 import pandas as pd
-import pmdarima as pm
 from matplotlib import pyplot as plt
 from pmdarima import auto_arima
 

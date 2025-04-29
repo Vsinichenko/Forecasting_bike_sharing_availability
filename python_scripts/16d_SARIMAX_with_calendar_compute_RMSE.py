@@ -4,22 +4,17 @@
 import argparse
 
 # import pmdarima.arima as pm_arima
-import gc
 import json
 import logging
 import os
 import pickle
 import sys
-import time
 import warnings
 from datetime import datetime
 from math import sqrt
 
 # from sklearn.metrics import mean_squared_error
-import numpy as np
 import pandas as pd
-import seaborn as sns
-from matplotlib import pyplot as plt
 from sklearn.metrics import mean_squared_error
 
 EXPERIMENT_NAME = "sarimax_calendar"
