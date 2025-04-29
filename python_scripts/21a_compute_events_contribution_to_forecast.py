@@ -148,10 +148,10 @@ event_colnames_helper = {"demand": "event_count_end", "supply": "event_count_sta
 
 collector = {}
 
-for city in ["FB"]:
-    for current_cell in ["871f81535ffffff"]:
+for city in city_ls:
+    for current_cell in df_helper[city].hex_id.unique():
         for part in part_ls:
-            for dep_var in ["demand"]:
+            for dep_var in dep_var_ls:
                 if dep_var == "demand":
                     exog_colnames = exog_colnames_demand
                 else:
